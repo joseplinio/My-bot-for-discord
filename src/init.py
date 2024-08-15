@@ -1,9 +1,9 @@
 # Importaçao
 from discord.ext import commands
-from cogs import rpg
+from src import rpg
 
 # Cogs para o jogo
-class Init(commands.cog):
+class Init(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
