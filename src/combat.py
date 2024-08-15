@@ -1,6 +1,7 @@
+# Importaçoes:
 from discord.ext import commands
-import json
 
+# Class de comandos para combate:
 class Combat(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -10,6 +11,6 @@ class Combat(commands.Cog):
         id_user = ctx.author.id
         await ctx.send('Você entrou em um combate!')
         
-
+# Define os comandos para o bot:
 async def setup(bot):
     await bot.add_cog(Combat(bot))
