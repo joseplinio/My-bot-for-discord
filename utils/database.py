@@ -16,11 +16,17 @@ def init_db(id_user, count):
         print(c)
     banco.close()
 
+def check(ctx, m):
+    return m.author == ctx.author and m.channel == ctx.channel
+
 
 async def create_user(ctx, id, count):
+    if check == check:
+        count += 1    
     id_user = ctx.author.id
     id = id_user
-    count += 1
+    
 
 def get_user():
-    pass
+
+    
