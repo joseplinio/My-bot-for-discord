@@ -22,8 +22,8 @@ def add_user(user_id, count):
 def get_user(user_id):
     global banco
     cursor = banco.cursor()
-    cursor.execute('select * from logins where id = ?',(user_id))
-    user = cursor.fetchone([0])
+    cursor.execute('select * from logins where id_user = ?',(user_id,))
+    user = cursor.fetchone()
     return user
 
 # Incrementa o contador do usuario aqui:
