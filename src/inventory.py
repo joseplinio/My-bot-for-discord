@@ -13,8 +13,12 @@ class Inventory(commands.Cog):
         user = ctx.author.id
         if user not in self.items:
             self.items[user] = []
-        self.items[user].append(item)
-        await ctx.send(f'Item {item} adicionado ao inventário!')
+        try:
+            self.items[user].append(item)
+        except Exception as e:
+            await ctx.send('Deu um erro!')
+        else:
+            await ctx.send(f'Item {item} adicionado ao inventário!')
     
     # Mostra iventario:
     @commands.command(name='show_inventory')

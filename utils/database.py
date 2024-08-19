@@ -45,4 +45,3 @@ def inc_user(user_id):
     # Retorna a contagems:
     cursor.execute("select user_id, chamadas from logins where user_id = ?",(user_id,))
     return cursor.fetchone()
-

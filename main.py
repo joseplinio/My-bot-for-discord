@@ -2,7 +2,7 @@
 from discord.ext import commands
 import discord
 import json
-
+from discord.ext.commands.errors import CommandNotFound
 
 # Carregar configurações:
 with open('data/config.json') as config_file:
@@ -35,9 +35,11 @@ async def on_ready():
     print(f'| ID: {bot.user.id}'.center(33))
     print('-'*42)
 
+# Tratamento de erro podendo ser usado em varios casos:
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error,CommandNotFound):
+        await ctx.send(f'Sorry. comando não reconhecido, caso queira ver a lista de comandos digite "!help". ✨')
+        
 
-# Inicia o banco de dados
-# Db is here.
-
-# Iniciar o bot
 bot.run(config['token'])
