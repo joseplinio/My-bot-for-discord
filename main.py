@@ -4,7 +4,6 @@ import discord
 import json
 
 
-
 # Carregar configurações:
 with open('data/config.json') as config_file:
     config = json.load(config_file)
