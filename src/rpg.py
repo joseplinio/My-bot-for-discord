@@ -8,7 +8,7 @@ class Rpg(commands.Cog):
         self.bot = bot
 
     @commands.command(name='criar_personagem')
-    async def cria_user(self, ctx, hp: float = 100, lv: int = 1 , exp: float = 0):
+    async def create_user(self, ctx, hp: float = 100, lv: int = 1 , exp: float = 0):
         # Pergunta para o nome do personagem ao user:
         await ctx.send('Qual vai ser o nome do seu personagem? : ')
         
