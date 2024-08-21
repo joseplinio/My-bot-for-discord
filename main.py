@@ -35,6 +35,20 @@ async def on_ready():
     print(f'| ID: {bot.user.id}'.center(33))
     print('-'*42)
 
+@bot.event
+async def on_member_join(member):
+    channel = discord.utils.get(member.guild.text_channels, name = 'geral')
+    # Mensage de welcome:
+    if channel:
+        await channel.send(f'🌟 **Bem-vindo(a) ao {member.guild.name}, {member.mention}!** 🌟\n\n'
+                           '🧙‍♂️ **Aventura te chama, bravo(a) aventureiro(a)!** 🧙‍♀️\n\n'
+                           '📜 **Antes de começar, confira estas orientações importantes:**\n'
+                           '1. **Role dos Jogadores:** Use `/introducao` para se apresentar e conhecer outros aventureiros.\n'
+                           '2. **Regras do Reino:** Para garantir a harmonia entre todos os jogadores, leia as regras em #regras-e-diretrizes.\n'
+                           '3. **Escolha sua Classe:** Não esqueça de escolher sua classe e raça em #escolha-de-classes.\n'
+                           '4. **Inicie sua Jornada:** Assim que estiver pronto(a), vá até #inicio-da-aventura para começar sua primeira missão!\n\n'
+                           '⚔️ **Que sua lâmina seja afiada, e seu espírito inabalável. O destino do reino está em suas mãos!** ⚔️')
+
 # Tratamento de erro podendo ser usado em varios casos:
 @bot.event
 async def on_command_error(ctx, error):
