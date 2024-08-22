@@ -17,7 +17,7 @@ bot = commands.Bot(command_prefix = config['prefix'], intents = intents)
 
 # Trazendo os comandos para a main ;] :
 async def load_extensions():
-    initial_extensions = ['src.adventure','src.combat','src.inventory','src.count','src.rpg']
+    initial_extensions = ['src.adventure','src.combat','src.inventory','src.count','src.rpg', 'src.introducao']
     for extension in initial_extensions:
         try:
             await bot.load_extension(extension)
@@ -42,11 +42,7 @@ async def on_member_join(member):
     if channel:
         await channel.send(f'🌟 **Bem-vindo(a) ao {member.guild.name}, {member.mention}!** 🌟\n\n'
                            '🧙‍♂️ **Aventura te chama, bravo(a) aventureiro(a)!** 🧙‍♀️\n\n'
-                           '📜 **Antes de começar, confira estas orientações importantes:**\n'
-                           '1. **Role dos Jogadores:** Use `/introducao` para se apresentar e conhecer outros aventureiros.\n'
-                           '2. **Regras do Reino:** Para garantir a harmonia entre todos os jogadores, leia as regras em #regras-e-diretrizes.\n'
-                           '3. **Escolha sua Classe:** Não esqueça de escolher sua classe e raça em #escolha-de-classes.\n'
-                           '4. **Inicie sua Jornada:** Assim que estiver pronto(a), vá até #inicio-da-aventura para começar sua primeira missão!\n\n'
+                           '1. **Role dos Jogadores:** Use `/introducao` para se aprender como começar sua jornada.\n'
                            '⚔️ **Que sua lâmina seja afiada, e seu espírito inabalável. O destino do reino está em suas mãos!** ⚔️')
 
 # Tratamento de erro podendo ser usado em varios casos:
@@ -55,5 +51,10 @@ async def on_command_error(ctx, error):
     if isinstance(error,CommandNotFound):
         await ctx.send(f'Sorry. comando não reconhecido, caso queira ver a lista de comandos digite "!help". ✨')
         
+
+# Comanmdo que mandar um mensage para o user sobre o inicio do RPG:
+@bot.command(name='iniciar_jornada')
+async def start_adventure(ctx):
+    await ctx.send(f'{ctx.author.name}iniciou uma aventura!')
 
 bot.run(config['token'])
