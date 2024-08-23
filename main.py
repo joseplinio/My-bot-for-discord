@@ -17,7 +17,7 @@ bot = commands.Bot(command_prefix = config['prefix'], intents = intents)
 
 # Trazendo os comandos para a main ;] :
 async def load_extensions():
-    initial_extensions = ['src.introducao']
+    initial_extensions = ['src.introducao','src.constants','src.inventory','scr.player']
     for extension in initial_extensions:
         try:
             await bot.load_extension(extension)
@@ -56,5 +56,5 @@ async def on_command_error(ctx, error):
 @bot.command(name='iniciar_jornada')
 async def start_adventure(ctx):
     await ctx.send(f'{ctx.author.name}iniciou uma aventura!')
-    
+
 bot.run(config['token'])
