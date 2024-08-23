@@ -56,5 +56,5 @@ async def on_command_error(ctx, error):
 @bot.command(name='iniciar_jornada')
 async def start_adventure(ctx):
     await ctx.send(f'{ctx.author.name}iniciou uma aventura!')
-    bot.
+    
 bot.run(config['token'])
