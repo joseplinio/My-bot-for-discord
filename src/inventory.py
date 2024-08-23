@@ -19,8 +19,13 @@ class Inventory(commands.Cog):
     async def count (self, ctx):
         user_data = load_data(f'{ctx.author.id}.json')
         inventory = user_data.get('inventory', [])
-        await ctx.send(f'Seu inventário: {", ".join(inventory)}')
-
+        try:
+            if inventory:
+                await ctx.send(f'Seu inventário: {", ".join(inventory)}')
+            else:
+                await ctx.send("Seu inventário está vazio.")                        
+        except FileNotFoundError:
+            await ctx.send("Você não possui um personagem ainda. Use o comando `!criar_personagem` para criar um.")
 
 # Define os comandos para o bot:
 async def setup(bot):
