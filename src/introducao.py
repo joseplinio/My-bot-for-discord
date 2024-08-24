@@ -11,7 +11,7 @@ class Introducao(commands.Cog):
     async def explore(self, ctx):
         await ctx.send("👋 **Bem-vindo ao RPG Bot!**\n\n"
             "Aqui estão algumas dicas para começar sua aventura:\n"
-            "1. Use `/start_adventure` no canal de comandos para criar seu personagem.\n"
+            "1. Use `/iniciar_jornada` no canal de comandos para criar seu personagem.\n"
             "Prepare-se para uma jornada épica!")
 
 # Define os comandos para o bot:

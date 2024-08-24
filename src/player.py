@@ -29,7 +29,7 @@ class Player(commands.Cog):
             user_data = {
                 "name": name,
                 "level": DEFAULT_LEVEL,
-                "life": DEFAULT_LEVEL,
+                "life": DEFAULT_HP,
                 "inventory": DEFAULT_INVENTORY,
                 "exp": DEFAULT_EXP
             }
