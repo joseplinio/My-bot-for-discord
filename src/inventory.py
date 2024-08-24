@@ -1,6 +1,6 @@
 # Importaçoes:
 from discord.ext import commands
-from json_handler import load_data, save_data
+from src.json_handler import load_data, save_data
 
 # Class do comando count:
 class Inventory(commands.Cog):

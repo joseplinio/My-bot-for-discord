@@ -17,7 +17,7 @@ bot = commands.Bot(command_prefix = config['prefix'], intents = intents)
 
 # Trazendo os comandos para a main ;] :
 async def load_extensions():
-    initial_extensions = ['src.introducao','src.constants','src.inventory','scr.player']
+    initial_extensions = ['src.introducao','src.inventory','src.player']
     for extension in initial_extensions:
         try:
             await bot.load_extension(extension)

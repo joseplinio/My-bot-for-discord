@@ -3,7 +3,7 @@ from discord.ext import commands
 import json
 import discord
 import asyncio
-from constants import DEFAULT_HP, DEFAULT_LEVEL, DEFAULT_INVENTORY, DEFAULT_EXP
+from src.constants import DEFAULT_HP, DEFAULT_LEVEL, DEFAULT_INVENTORY, DEFAULT_EXP
 
 # Abrindo a confing do arquivo data:
 with open('data/config.json') as config_file:
