@@ -49,12 +49,6 @@ async def on_member_join(member):
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error,CommandNotFound):
-        await ctx.send(f'Sorry. comando não reconhecido, caso queira ver a lista de comandos digite "!help". ✨')
-        
-
-# Comanmdo que mandar um mensage para o user sobre o inicio do RPG:
-@bot.command(name='iniciar_jornada')
-async def start_adventure(ctx):
-    await ctx.send(f'{ctx.author.name}iniciou uma aventura!')
+        await ctx.send(f'**Sorry. Comando não reconhecido, caso queira ver a lista de comandos digite "!help". ✨**')
 
 bot.run(config['token'])

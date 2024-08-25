@@ -11,8 +11,7 @@ with open('data/config.json') as config_file:
 
 # Permisoes do bot:
 intents = discord.Intents.default()
-intents.messages = True
-
+intents.message_content = True
 # Criação do bot com o prefixo definido
 bot = commands.Bot(command_prefix=config['prefix'], intents=intents)
 
@@ -35,24 +34,24 @@ class Player(commands.Cog):
             }
             with open (f'{ctx.author.id}.json', 'w') as f:
                 json.dump(user_data, f)
-            await  ctx.send(f'Personagem {name} criado com sucesso!') 
+            await  ctx.send(f'**Personagem *{name}* criado com sucesso!**') 
         else:
-            await ctx.send('Não foi possível criar o personagem, pois nenhum nome foi fornecido.')
+            await ctx.send('**Não foi possível criar o personagem, pois nenhum nome foi fornecido.**')
         
     
     async def pergunta_name(self, ctx):
-        await ctx.send('Qual vai ser o nome do seu personagem? : ')
+        await ctx.send('**Qual vai ser o nome do seu personagem? : **')
         
         def check(m):
             return m.author == ctx.author and m.channel == ctx.channel
         
         try:
-            response = await bot.wait_for('message', check=check,timeout=30.0)
-            await ctx.send(f'Ótimo nome,{response.content}!')
+            response = await self.bot.wait_for('message', check=check,timeout=30.0)
+            await ctx.send(f'**Ótimo nome,** *{response.content}* **!**')
             await asyncio.sleep(1.3)
             return response.content        
         except asyncio.TimeoutError:
-            await ctx.send('Você demorou muito tempo para responder.')
+            await ctx.send('**Você demorou muito tempo para responder.**')
             return None
 
     @commands.command(name='view_stats')

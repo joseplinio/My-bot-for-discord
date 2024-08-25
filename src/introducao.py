@@ -16,4 +16,4 @@ class Introducao(commands.Cog):
 
 # Define os comandos para o bot:
 async def setup(bot):
-     await bot.add_cog(Introducao(bot))
+    await bot.add_cog(Introducao(bot))
