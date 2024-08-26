@@ -25,7 +25,6 @@ class Player(commands.Cog):
     @commands.command(name='criar_personagem')
     async def create_character(self, ctx,):
         name = await self.pergunta_name(ctx)
-        class_for_user = await self.pergunta_class(ctx)
         if name:
             user_data = {
                 "name": name,
@@ -33,7 +32,6 @@ class Player(commands.Cog):
                 "life": DEFAULT_HP,
                 "inventory": DEFAULT_INVENTORY,
                 "exp": DEFAULT_EXP,
-                "class": class_for_user
             }
             with open (f'{ctx.author.id}.json', 'w') as f:
                 json.dump(user_data, f)
@@ -59,18 +57,23 @@ class Player(commands.Cog):
         
     async def pergunta_class(ctx):
         await ctx.send('**Qual clase voce vai escolher nobre aventureiro? : **')
+        
 
         def check(m):
             return m.author == ctx.author and m.channel == ctx.channel
         
-        try:
-            pass
-        except:
-            pass
-    
     @commands.command(name='view_stats')
     async def view_stats(self, ctx):
-        pass  
+        try:
+            with open(f'{ctx.author.id}.json', 'r') as f:
+                user_data = json.load(f)
+            await ctx.send(f"**Status do Personagem:**\n"
+                f"Nome: **{user_data['name']}**\n"
+                f"Nível: **{user_data['level']}**\n"
+                f"Vida: **{user_data['life']}**\n"
+                f"Experiência: **{user_data['exp']}**")
+        except FileNotFoundError:
+            await ctx.send('Nenhum personagem encontrado. Por favor, crie um personagem primeiro usando o comando `!criar_personagem`.')
         
 # Define os comandos para o bot:
 async def setup(bot):
