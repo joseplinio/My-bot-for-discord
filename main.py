@@ -17,7 +17,7 @@ bot = commands.Bot(command_prefix = config['prefix'], intents = intents)
 
 # Trazendo os comandos para a main ;] :
 async def load_extensions():
-    initial_extensions = ['src.introducao','src.inventory','src.player']
+    initial_extensions = ['src.introducao','src.inventory','src.player','src.iniciar']
     for extension in initial_extensions:
         try:
             await bot.load_extension(extension)
@@ -49,6 +49,6 @@ async def on_member_join(member):
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error,CommandNotFound):
-        await ctx.send(f'**Sorry. Comando não reconhecido, caso queira ver a lista de comandos digite "!help". ✨**')
+        await ctx.send(f'**Sorry. Comando não reconhecido, caso queira ver a lista de comandos digite `!help`.**')
 
 bot.run(config['token'])
