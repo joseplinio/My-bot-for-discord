@@ -8,7 +8,7 @@ class Inventory(commands.Cog):
         self.bot = bot
 
     @commands.command(name='add_item')
-    async def count (self, ctx, item: str):
+    async def add_item (self, ctx, item: str):
         user_data = load_data(f'{ctx.author.id}.json')
         user_data['inventory'].append(item)
         save_data(f'{ctx.author.id}.json', user_data)        
@@ -16,7 +16,7 @@ class Inventory(commands.Cog):
 
 
     @commands.command(name='ver_inventory')
-    async def count (self, ctx):
+    async def show_inventory (self, ctx):
         user_data = load_data(f'{ctx.author.id}.json')
         inventory = user_data.get('inventory', [])
         try:
