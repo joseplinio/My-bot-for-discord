@@ -7,16 +7,20 @@ class Inventory(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    # Comando que adiciona um item ao inventory:
     @commands.command(name='add_item')
     async def add_item (self, ctx, item: str):
+        # carega no user_data o ARQ.json:
         user_data = load_data(f'{ctx.author.id}.json')
         user_data['inventory'].append(item)
+        # Sava a data no ARQ.json e coloca os datos que e o item:
         save_data(f'{ctx.author.id}.json', user_data)        
         await  ctx.send(f'O item {item} foi adicionado com sucesso ao seu inventário.')
 
-
+    # Mostra o inventory ao user:
     @commands.command(name='ver_inventory')
     async def show_inventory (self, ctx):
+        # carega no user_data o ARQ.json:
         user_data = load_data(f'{ctx.author.id}.json')
         inventory = user_data.get('inventory', [])
         try:
