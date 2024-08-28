@@ -51,4 +51,7 @@ async def on_command_error(ctx, error):
     if isinstance(error,CommandNotFound):
         await ctx.send(f'**Sorry. Comando não reconhecido, caso queira ver a lista de comandos digite `!help`.**')
 
-bot.run(config['token'])
+try:
+    bot.run(config['token'])
+except Exception as e:
+    print(f'ERRO : {e}')

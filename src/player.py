@@ -44,7 +44,7 @@ class Player(commands.Cog):
         
     
     async def pergunta_name(self, ctx):
-        # Lib pra validaçao de dota:
+        # Lib pra validaçao de data:
         import re
 
         # Pergunta o nome:
@@ -72,15 +72,32 @@ class Player(commands.Cog):
             await ctx.send('**Você demorou muito tempo para responder.**')
             return None
         
-    async def pergunta_class(ctx):
+    async def pergunta_class(self, ctx):
+        lista_classes = ["Herói", "Mago", "Arqueiro", "Guerreiro"]
+        
         await ctx.send('**Qual clase voce vai escolher nobre aventureiro? : **')
         
-
+        async def menu(self, ctx):
+            for idx, classe in enumerate(lista_classes, 1):
+                await ctx.send(f'{idx} - {classe}')
+        
         def check(m):
-            return m.author == ctx.author and m.channel == ctx.channel
+            m.author == ctx.author and m.channel == ctx.channel
+            
+        respose = await self.bot.wait_for('message', check=check,timeout=30.0)
+        try:
+            if respose.content.isdigit() and 1 <= int(respose.content) <= len(lista_classes):
+                chosen_class = lista_classes[int(respose.content) - 1]
+                await ctx.send(f'**Você escolheu a classe:** *{chosen_class}*')
+                return chosen_class
+            else:
+                await ctx.send('Resposta inválida. Por favor, escolha um número correspondente à classe.')
+                return None
+        except TimeoutError:
+            await ctx.send('Você demorou muito tempo para responder.')
+            return None
         
-        # Falta validaçao de dos para a pergunta
-        
+            
     @commands.command(name='view_stats')
     async def view_stats(self, ctx):
         try:
@@ -95,7 +112,7 @@ class Player(commands.Cog):
                 f"Experiência: **{user_data['exp']}**")
         except FileNotFoundError:
             # Se nao tiver o ARQ.json da esse error: 
-            await ctx.send('Nenhum personagem encontrado. Por favor, crie um personagem primeiro usando o comando `!criar_personagem`.')
+            await ctx.send('**Nenhum personagem encontrado. Por favor, crie um personagem primeiro usando o comando `!criar_personagem`.**')
         
 
 # Define os comandos para o bot:
