@@ -4,6 +4,7 @@ import json
 import discord
 import asyncio
 from src.constants import DEFAULT_HP, DEFAULT_LEVEL, DEFAULT_INVENTORY, DEFAULT_EXP
+import re
 
 # Abrindo a confing do arquivo data:
 with open('data/config.json') as config_file:
@@ -26,6 +27,8 @@ class Player(commands.Cog):
     @commands.command(name='criar_personagem')
     async def create_character(self, ctx,):
         name = await self.pergunta_name(ctx)
+        classe_of_user = await self.pergunta_class(ctx)
+        
         # Se nao de o TimeOutErro o if e executado se nao o else:
         if name:
             user_data = {
@@ -34,6 +37,7 @@ class Player(commands.Cog):
                 "life": DEFAULT_HP,
                 "inventory": DEFAULT_INVENTORY,
                 "exp": DEFAULT_EXP,
+                "class": classe_of_user
             }
             # Abre o ARQ.json e escreve nele o user_data:
             with open (f'{ctx.author.id}.json', 'w') as f:
@@ -44,59 +48,66 @@ class Player(commands.Cog):
         
     
     async def pergunta_name(self, ctx):
-        # Lib pra validaçao de data:
-        import re
+        # Ta tendo erro.
+        while True:
+            # Pergunta o nome:
+            await ctx.send('**Qual vai ser o nome do seu personagem? : **')
+            
+            def check(m):
+                return m.author == ctx.author and m.channel == ctx.channel
+            
+            try:
+                response = await self.bot.wait_for('message', check=check,timeout=30.0)
+                name = response.content.strip()  # Tira os espaços
+                name = re.sub(r'\s+', '_', name) # Substitui os espaços por __
+                sanitized_name = name.replace("<", "&lt;").replace(">", "&gt;") # Previnino contra ataque em HTML:
 
-        # Pergunta o nome:
-        await ctx.send('**Qual vai ser o nome do seu personagem? : **')
-        
-        def check(m):
-            return m.author == ctx.author and m.channel == ctx.channel
-        
-        try:
-            response = await self.bot.wait_for('message', check=check,timeout=30.0)
-            name = response.content.strip()  # Tira os espaços
-            name = re.sub(r'\s+', '_', name) # Substitui os espaços por __
-            sanitized_name = name.replace("<", "&lt;").replace(">", "&gt;") # Previnino contra ataque em HTML:
-
-            # Se o nome tiver caracteris malisiosos avisa:
-            if not re.match("^[A-Za-z0-9_-]*$", response.content):
-                await ctx.send("Nome inválido! Use apenas letras, números, hífens e sublinhados.")
-                return None
-            else:
-                await ctx.send(f'**Ótimo nome,** *{sanitized_name}* **!**')
-                await asyncio.sleep(1.3)
-                return sanitized_name
-        except asyncio.TimeoutError:
-            # Error por esperar:
-            await ctx.send('**Você demorou muito tempo para responder.**')
-            return None
+                # Se o nome tiver caracteris malisiosos avisa:
+                if not re.match("^[A-Za-z0-9_-]*$", sanitized_name):
+                    await ctx.send("Nome inválido! Use apenas letras, números, hífens e sublinhados.")
+                    continue
+                await ctx.send(f'**Você escolheu o nome:** *{sanitized_name}*. **Está correto? (sim/não)**')
+                try:
+                    confirma_response = await self.bot.wait_for('message', check=check,timeout=30.0)
+                    if confirma_response.content.lower().strip()[0] == 's':
+                        await ctx.send(f'**Ótimo nome,** *{sanitized_name}* **!**')
+                        await asyncio.sleep(1.3)
+                        return sanitized_name
+                except asyncio.TimeoutError:
+                    await ctx.send('**Você demorou muito tempo para responder.**')
+                    continue  # Volta ao início do loop para perguntar o nome novamente
+            except asyncio.TimeoutError:
+                # Error por esperar:
+                await ctx.send('**Você demorou muito tempo para responder.**')
+                continue
         
     async def pergunta_class(self, ctx):
         lista_classes = ["Herói", "Mago", "Arqueiro", "Guerreiro"]
         
         await ctx.send('**Qual clase voce vai escolher nobre aventureiro? : **')
-        
-        async def menu(self, ctx):
-            for idx, classe in enumerate(lista_classes, 1):
-                await ctx.send(f'{idx} - {classe}')
-        
+        for idx, classe in enumerate(lista_classes, 1):
+            await ctx.send(f'{idx} - {classe}')
+    
         def check(m):
-            m.author == ctx.author and m.channel == ctx.channel
-            
-        respose = await self.bot.wait_for('message', check=check,timeout=30.0)
-        try:
-            if respose.content.isdigit() and 1 <= int(respose.content) <= len(lista_classes):
-                chosen_class = lista_classes[int(respose.content) - 1]
-                await ctx.send(f'**Você escolheu a classe:** *{chosen_class}*')
-                return chosen_class
-            else:
-                await ctx.send('Resposta inválida. Por favor, escolha um número correspondente à classe.')
+            return m.author == ctx.author and m.channel == ctx.channel
+        while True:
+            respose = await self.bot.wait_for('message', check=check,timeout=30.0)
+            try:
+                if respose.content.isdigit() and 1 <= int(respose.content) <= len(lista_classes):
+                    chosen_class = lista_classes[int(respose.content) - 1]
+                    await ctx.send(f'**Você escolheu a classe:** *{chosen_class}*')
+                try:
+                    confirma_response = await self.bot.wait_for('message', check=check,timeout=30.0)
+                    if confirma_response.content.lower().strip()[0] == 's':
+                except:
+                    pass
+                else:
+                    await ctx.send('Resposta inválida. Por favor, escolha um número correspondente à classe.')
+                    return None
+            except asyncio.TimeoutError:
+                await ctx.send('Você demorou muito tempo para responder.')
                 return None
-        except TimeoutError:
-            await ctx.send('Você demorou muito tempo para responder.')
-            return None
-        
+            
             
     @commands.command(name='view_stats')
     async def view_stats(self, ctx):
