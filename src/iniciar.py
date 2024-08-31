@@ -14,6 +14,10 @@ class Count(commands.Cog):
         await ctx.send(f'`{ctx.author.name}` **iniciou uma aventura!**')
         await self.player_cog.create_character(ctx)
 
+    @commands.command(name='tuturial')
+    async def tuturial(self, ctx):
+        await ctx.send('**Tem que terminar...**')
+
 # Define os comandos para o bot:
 async def setup(bot):
     await bot.add_cog(Count(bot))
