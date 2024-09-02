@@ -17,7 +17,6 @@ intents.message_content = True
 # Criação do bot com o prefixo definido
 bot = commands.Bot(command_prefix=config['prefix'], intents=intents)
 
-
 # Class of player:
 class Player(commands.Cog):
     def __init__(self, bot):
@@ -42,6 +41,7 @@ class Player(commands.Cog):
             # Abre o ARQ.json e escreve nele o user_data:
             with open (f'{ctx.author.id}.json', 'w') as f:
                 json.dump(user_data, f)
+            asyncio.sleep(1.3)
             await  ctx.send(f'**Personagem *{name}* criado com sucesso!**') 
         else:
             await ctx.send('**Não foi possível criar o personagem, pois nenhum nome foi fornecido.**')
@@ -84,29 +84,30 @@ class Player(commands.Cog):
     async def pergunta_class(self, ctx):
         lista_classes = ["Herói", "Mago", "Arqueiro", "Guerreiro"]
         
-        await ctx.send('**Qual clase voce vai escolher nobre aventureiro? : **')
-        for idx, classe in enumerate(lista_classes, 1):
-            await ctx.send(f'{idx} - {classe}')
-    
         def check(m):
             return m.author == ctx.author and m.channel == ctx.channel
         while True:
-            respose = await self.bot.wait_for('message', check=check,timeout=30.0)
-            try:
-                if respose.content.isdigit() and 1 <= int(respose.content) <= len(lista_classes):
-                    chosen_class = lista_classes[int(respose.content) - 1]
-                    await ctx.send(f'**Você escolheu a classe:** *{chosen_class}*')
+            await ctx.send('**Qual clase voce vai escolher nobre aventureiro? : **')
+            for idx, classe in enumerate(lista_classes, 1):
+                await ctx.send(f'{idx} - {classe}')
                 try:
-                    confirma_response = await self.bot.wait_for('message', check=check,timeout=30.0)
-                    if confirma_response.content.lower().strip()[0] == 's':
-                except:
-                    pass
-                else:
-                    await ctx.send('Resposta inválida. Por favor, escolha um número correspondente à classe.')
-                    return None
-            except asyncio.TimeoutError:
-                await ctx.send('Você demorou muito tempo para responder.')
-                return None
+                    respose = await self.bot.wait_for('message', check=check,timeout=30.0)
+                    if respose.content.isdigit() and 1 <= int(respose.content) <= len(lista_classes):
+                        chosen_class = lista_classes[int(respose.content) - 1]
+                        await ctx.send(f'**Você escolheu a classe:** *{chosen_class}*.\n'
+                               '**Está correto? (sim/não)**')
+                    try:
+                        confirma_response = await self.bot.wait_for('message', check=check,timeout=30.0)
+                        if confirma_response.content.lower().strip()[0] == 's':
+                            await ctx.send(f'**Sua classe é {chosen_class}**.\n')
+                    except:
+                        pass
+                    else:
+                        await ctx.send('Resposta inválida. Por favor, escolha um número correspondente à classe.')
+                        continue
+                except asyncio.TimeoutError:
+                    await ctx.send('Você demorou muito tempo para responder.')
+                    continue
             
             
     @commands.command(name='view_stats')
