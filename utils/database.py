@@ -1,4 +1,4 @@
-# Importaçoes:
+# Importaçao:
 import sqlite3
 
 # Banco de dodos global
