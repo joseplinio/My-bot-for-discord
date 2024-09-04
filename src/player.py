@@ -26,7 +26,7 @@ class Player(commands.Cog):
     @commands.command(name='criar_personagem')
     async def create_character(self, ctx,):
         name = await self.pergunta_name(ctx)
-        classe_of_user = await self.pergunta_class(ctx)
+        clase_of_user = await self.pergunta_class(ctx)
         
         # Se nao de o TimeOutErro o if e executado se nao o else:
         if name:
@@ -36,19 +36,18 @@ class Player(commands.Cog):
                 "life": DEFAULT_HP,
                 "inventory": DEFAULT_INVENTORY,
                 "exp": DEFAULT_EXP,
-                "class": classe_of_user
+                "class": clase_of_user
             }
             # Abre o ARQ.json e escreve nele o user_data:
             with open (f'{ctx.author.id}.json', 'w') as f:
                 json.dump(user_data, f)
-            asyncio.sleep(1.3)
+            await asyncio.sleep(1.5)
             await  ctx.send(f'**Personagem *{name}* criado com sucesso!**') 
         else:
             await ctx.send('**Não foi possível criar o personagem, pois nenhum nome foi fornecido.**')
         
     
     async def pergunta_name(self, ctx):
-        # Ta tendo erro.
         while True:
             # Pergunta o nome:
             await ctx.send('**Qual vai ser o nome do seu personagem? : **')
@@ -66,50 +65,72 @@ class Player(commands.Cog):
                 if not re.match("^[A-Za-z0-9_-]*$", sanitized_name):
                     await ctx.send("Nome inválido! Use apenas letras, números, hífens e sublinhados.")
                     continue
-                await ctx.send(f'**Você escolheu o nome:** *{sanitized_name}*. **Está correto? (sim/não)**')
+                await ctx.send(f'**Você escolheu o nome:** __{sanitized_name}__. **Está correto? (sim/não)**')
+               
                 try:
                     confirma_response = await self.bot.wait_for('message', check=check,timeout=30.0)
                     if confirma_response.content.lower().strip()[0] == 's':
                         await ctx.send(f'**Ótimo nome,** *{sanitized_name}* **!**')
-                        await asyncio.sleep(1.3)
+                        await asyncio.sleep(1.5)
                         return sanitized_name
+                
                 except asyncio.TimeoutError:
                     await ctx.send('**Você demorou muito tempo para responder.**')
+                    await asyncio.sleep(1.5)
                     continue  # Volta ao início do loop para perguntar o nome novamente
+            
             except asyncio.TimeoutError:
                 # Error por esperar:
                 await ctx.send('**Você demorou muito tempo para responder.**')
-                continue
-        
+                return None
+            
     async def pergunta_class(self, ctx):
         lista_classes = ["Herói", "Mago", "Arqueiro", "Guerreiro"]
         
         def check(m):
             return m.author == ctx.author and m.channel == ctx.channel
-        while True:
-            await ctx.send('**Qual clase voce vai escolher nobre aventureiro? : **')
-            for idx, classe in enumerate(lista_classes, 1):
-                await ctx.send(f'{idx} - {classe}')
+        
+        def menu(lista):
+            result = ""
+            for idx, classe in enumerate(lista, 1):
+                result +=f'**{idx} - {classe}**\n'
+            return result
+        
+        await ctx.send('**Qual clase voce vai escolher nobre aventureiro? : **') 
+        await ctx.send(menu(lista_classes))
+
+        while True:    
                 try:
+                    # Espera pela respota do usuario:
                     respose = await self.bot.wait_for('message', check=check,timeout=30.0)
+                   
                     if respose.content.isdigit() and 1 <= int(respose.content) <= len(lista_classes):
                         chosen_class = lista_classes[int(respose.content) - 1]
                         await ctx.send(f'**Você escolheu a classe:** *{chosen_class}*.\n'
                                '**Está correto? (sim/não)**')
-                    try:
-                        confirma_response = await self.bot.wait_for('message', check=check,timeout=30.0)
-                        if confirma_response.content.lower().strip()[0] == 's':
-                            await ctx.send(f'**Sua classe é {chosen_class}**.\n')
-                    except:
-                        pass
+                        
+                        try:
+                            confirma_response = await self.bot.wait_for('message', check=check,timeout=30.0)
+                            if confirma_response.content.lower().strip()[0] == 's':
+                                await ctx.send(f'**Sua classe é {chosen_class}**.')
+                                return chosen_class                            
+                            else:
+                                await ctx.send('**Escolha cancelada. Vamos tentar novamente.**')
+                                await asyncio.sleep(1.5)
+                                await ctx.send(menu(lista_classes))
+                                continue                        
+                        except asyncio.TimeoutError:
+                            await ctx.send('Resposta inválida. Por favor, escolha um número correspondente à classe.')
+                            await asyncio.sleep(1.5)
+                            continue
+                    
                     else:
                         await ctx.send('Resposta inválida. Por favor, escolha um número correspondente à classe.')
-                        continue
+                        continue  # Recomeça o loop para uma nova tentativa
+
                 except asyncio.TimeoutError:
-                    await ctx.send('Você demorou muito tempo para responder.')
-                    continue
-            
-            
+                    return None
+                            
     @commands.command(name='view_stats')
     async def view_stats(self, ctx):
         try:
@@ -125,7 +146,6 @@ class Player(commands.Cog):
         except FileNotFoundError:
             # Se nao tiver o ARQ.json da esse error: 
             await ctx.send('**Nenhum personagem encontrado. Por favor, crie um personagem primeiro usando o comando `!criar_personagem`.**')
-        
 
 # Define os comandos para o bot:
 async def setup(bot):
