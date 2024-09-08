@@ -34,8 +34,11 @@ class User(commands.Cog):
                 "name": name,
                 "level": DEFAULT_LEVEL,
                 "life": DEFAULT_HP,
+                "max_life" : 100,
                 "inventory": DEFAULT_INVENTORY,
                 "exp": DEFAULT_EXP,
+                "exp_max": 100,
+                "damege": 25,
                 "class": clase_of_user
             }
             # Abre o ARQ.json e escreve nele o user_data:
