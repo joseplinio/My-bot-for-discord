@@ -28,6 +28,7 @@ async def load_extensions():
 # Mensagem de confirmação:
 @bot.event
 async def on_ready():
+    bot.batalhas = {}
     await load_extensions() # Carrega as Cogs
     print()
     print('-'*42)

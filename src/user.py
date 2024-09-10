@@ -24,7 +24,7 @@ class User(commands.Cog):
 
     # Comando para criar um personagem:
     @commands.command(name='criar_personagem')
-    async def create_character(self, ctx,):
+    async def create_character(self, ctx):
         name = await self.pergunta_name(ctx)
         clase_of_user = await self.pergunta_class(ctx)
         
@@ -38,7 +38,7 @@ class User(commands.Cog):
                 "inventory": DEFAULT_INVENTORY,
                 "exp": DEFAULT_EXP,
                 "exp_max": 100,
-                "damege": 25,
+                "damege": 20,
                 "class": clase_of_user
             }
             # Abre o ARQ.json e escreve nele o user_data:
