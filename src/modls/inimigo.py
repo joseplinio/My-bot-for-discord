@@ -1,7 +1,7 @@
-# Importaçoes:
-from player import Player
+# Importações:
+from .player import Player
 
-# Class Inimigo:
+# Classe Inimigo:
 class Inimigo:
     """
     Representa um inimigo no jogo.
@@ -12,50 +12,63 @@ class Inimigo:
         dano (int): O dano que o inimigo pode causar.
         exp (int): A quantidade de experiência que o inimigo fornece ao ser derrotado.
     """
+
     def __init__(self, nome: str, vida: int, dano: int, exp: int):
         self._nome = nome
-        self._vida = max(vida, 0)   
-        self._dano = max(dano, 0)
-        self._exp = max(exp, 0)
+        self._vida = max(vida, 0)  # Vida mínima é 0
+        self._dano = max(dano, 0)  # Dano mínimo é 0
+        self._exp = max(exp, 0)  # Experiência mínima é 0
         self._player = None
-    
-    # Adciona o jogador ao combat:
-    def adiciona_jogador_ao_combate(self, player: Player):
-        self._player = player
-    
-    def ataque(self):
-        self._vida -= self._player._dano
-        
-    
+
     # Getters para acessar os atributos de forma controlada:
-    def get_nome(self) -> str:
-        return self._nome 
-    
-    def get_vida(self) -> int:
+    @property
+    def nome(self) -> str:
+        return self._nome
+
+    @property
+    def vida(self) -> int:
         return self._vida
-    
-    def get_dano(self) -> int:
+
+    @property
+    def dano(self) -> int:
         return self._dano
-    
-    def get_exp(self) -> int:
+
+    @property
+    def exp(self) -> int:
         return self._exp
 
-    # Setters para alterar valores com validação   
-    def set_vida(self, nova_vida: int):
-        if self._vida <= 0:
-            self._vida = nova_vida
-        else:
-            raise ValueError ('A vida não pode ser negativa.')
-            
-    def set_dano(self, nova_dano: int):
-        if self._vida <= 0:
-            self._vida = nova_dano
-        else:
-            raise ValueError ('A dano não pode ser negativa.')
-        
-    def set_exp(self, novo_exp: int):
-        if self._exp <= 0:
-            self._exp = novo_exp
-        else:
-            raise ValueError('O exp não pode ser negativa.')
+    # Setters para alterar valores com validação:
+    @vida.setter
+    def vida(self, nova_vida: int) -> None:
+        if nova_vida < 0:
+            raise ValueError('A vida não pode ser negativa.')
+        self._vida = nova_vida
 
+    @dano.setter
+    def dano(self, novo_dano: int) -> None:
+        if novo_dano < 0:
+            raise ValueError('O dano não pode ser negativo.')
+        self._dano = novo_dano
+
+    @exp.setter
+    def exp(self, novo_exp: int) -> None:
+        if novo_exp < 0:
+            raise ValueError('A experiência não pode ser negativa.')
+        self._exp = novo_exp
+
+# Adiciona o jogador ao combate:
+    def adiciona_jogador_ao_combate(self, player: Player):
+        self._player = player
+
+    def atacar_jogador(self) -> None:
+        """Inimigo ataca o jogador, causando dano à vida do jogador."""
+        if self._player:
+            self._player.receber_dano(self._dano)
+        else:
+            raise ValueError('Nenhum jogador está em combate com este inimigo.')
+
+    def receber_dano(self, dano: int) -> None:
+        """O inimigo recebe dano e reduz a quantidade de vida."""
+        if dano < 0:
+            raise ValueError('Dano não pode ser negativo.')
+        self._vida = max(self._vida - dano, 0)  # Garante que a vida não fique negativa
