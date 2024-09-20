@@ -1,6 +1,3 @@
-# Importações:
-from .player import Player
-
 # Classe Inimigo:
 class Inimigo:
     """
@@ -57,7 +54,10 @@ class Inimigo:
         self._exp = novo_exp
 
 # Adiciona o jogador ao combate:
-    def adiciona_jogador_ao_combate(self, player: Player):
+    def adiciona_jogador_ao_combate(self, player):
+        from .player import Player
+        if not isinstance(player, Player):
+            raise ValueError('O objeto passado não é um Player.')
         self._player = player
 
     def atacar_jogador(self) -> None:
