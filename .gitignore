@@ -1,5 +1,6 @@
 env
 data
 __pycache__
-test
-527248805482070022.json
+.pytest_cache
+.env
+test_tests.py

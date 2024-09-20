@@ -29,6 +29,7 @@ async def load_extensions():
 @bot.event
 async def on_ready():
     await load_extensions() # Carrega as Cogs
+    
     print()
     print('-'*42)
     print(f'|\033[32m Bot: {bot.user.name} está pronto\033[m!'.center(49))
