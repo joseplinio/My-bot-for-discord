@@ -14,8 +14,9 @@ class Player:
         classe (str): A classe do player (ex.: Guerreiro, Mago).
     """
 
-    def __init__(self, nome: str, vida: int, dano: int, exp: int, classe: str):
+    def __init__(self, nome: str, vida: int, dano: int, inventario: list, exp: int, classe: str):
         self._nome = nome
+        self._inventario = inventario
         self._vida = max(vida, 0)  # Vida mínima é 0
         self._dano = max(dano, 0)  # Dano mínimo é 0
         self._exp = max(exp, 0)  # Experiência mínima é 0
@@ -38,6 +39,10 @@ class Player:
     def exp(self) -> int:
         return self._exp
 
+    @property
+    def inventario(self) -> list:
+        return self._inventario
+    
     @property
     def classe(self) -> str:
         return self._classe
