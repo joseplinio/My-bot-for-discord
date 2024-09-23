@@ -10,6 +10,7 @@ class Player:
         nome (str): O nome do player.
         vida (int): A quantidade de vida do player.
         dano (int): O dano que o player pode causar.
+        inventario (list): O inventario do player para carregar os itens.
         exp (int): A quantidade de experiência que o player possui.
         classe (str): A classe do player (ex.: Guerreiro, Mago).
     """
