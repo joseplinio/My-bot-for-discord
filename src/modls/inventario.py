@@ -15,7 +15,6 @@ class Inventario(Item):
             return True
         return False
     
-    
     def remove_item(self, item):
         if item in self.itens:
             self.itens.remove(item)
