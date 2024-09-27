@@ -75,6 +75,7 @@ class Inimigo:
         self._vida = max(self._vida - dano, 0)  # Garante que a vida não fique negativa
 
     def gerar_descricao(self) -> str:
+        """Faz com o inimigo receba uma descrição aleatoria com ações e adjetivos para a descrição"""
         # Iportaçao:
         from random import choice
         
