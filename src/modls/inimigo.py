@@ -35,6 +35,10 @@ class Inimigo:
     def exp(self) -> int:
         return self._exp
 
+    @property
+    def descricao(self) -> str:
+        return self._descricao
+    
     # Setters para alterar valores com validação:
     @vida.setter
     def vida(self, nova_vida: int) -> None:
