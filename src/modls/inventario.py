@@ -22,4 +22,4 @@ class Inventario(Item):
         return False
     
     def list_item(self):
-        return [Item.nome for item in self.itens]
+        return [item.nome for item in self.itens]
