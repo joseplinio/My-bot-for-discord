@@ -16,7 +16,7 @@ class InimigoVoador(Inimigo):
     """
     # Chama o construtor da classe pai (Inimigo)
     def __init__(self, nome: str, vida: int, dano: int, exp: int, altura_de_voo: int):
-        super().__init__(nome='Dragao', vida=DEFAULT_HP, dano=25, exp=30)
+        super().__init__(nome='Dragao', vida=DEFAULT_HP, dano=25, exp=30,descricao=self.gerar_descricao())
         self._altura_de_voo = max(altura_de_voo, 0)
 
     # Getters para acessar os atributos de forma controlada:  

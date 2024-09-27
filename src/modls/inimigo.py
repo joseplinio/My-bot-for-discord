@@ -10,12 +10,13 @@ class Inimigo:
         exp (int): A quantidade de experiência que o inimigo fornece ao ser derrotado.
     """
 
-    def __init__(self, nome: str, vida: int, dano: int, exp: int):
+    def __init__(self, nome: str, vida: int, dano: int, exp: int, descricao: str = None):
         self._nome = nome
         self._vida = max(vida, 0)  # Vida mínima é 0
         self._dano = max(dano, 0)  # Dano mínimo é 0
         self._exp = max(exp, 0)  # Experiência mínima é 0
         self._player = None
+        self._descricao = descricao if descricao else self.gerar_descricao()
 
     # Getters para acessar os atributos de forma controlada:
     @property
@@ -72,3 +73,11 @@ class Inimigo:
         if dano < 0:
             raise ValueError('Dano não pode ser negativo.')
         self._vida = max(self._vida - dano, 0)  # Garante que a vida não fique negativa
+
+    def gerar_descricao(self) -> str:
+        # Iportaçao:
+        from random import choice
+        
+        adjetivo = ["feroz", "assustador", "imponente", "misterioso", "ágil"]
+        acoes =  ["espreita nas sombras", "olha fixamente para você", "prepara-se para atacar", "emite um som ameaçador"]
+        return f"Um {choice(adjetivo)} {self._nome} que {choice(acoes)}."
