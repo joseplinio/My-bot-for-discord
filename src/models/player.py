@@ -15,12 +15,14 @@ class Player:
         classe (str): A classe do player (ex.: Guerreiro, Mago).
     """
 
-    def __init__(self, nome: str, vida: int, dano: int, inventario: list, exp: int, classe: str):
+    def __init__(self, nome: str, nivel: int, vida: int, dano: int, inventario: list, exp: int, classe: str):
         self._nome = nome
         self._inventario = inventario
-        self._vida = max(vida, 0)  # Vida mínima é 0
-        self._dano = max(dano, 0)  # Dano mínimo é 0
-        self._exp = max(exp, 0)  # Experiência mínima é 0
+        self._nivel = nivel
+        self._vida_maxima = max(vida, 100) # Vida máxima mínima é 100
+        self._vida = self._vida_maxima  # Vida inicial é igual à vida máxima
+        self._dano = max(dano, 15)  # Dano mínimo é 15
+        self._exp = max(exp, 1)  # Experiência mínima é 1
         self._classe = classe
     
     # Getters para acessar os atributos de forma controlada:
@@ -31,7 +33,11 @@ class Player:
     @property
     def vida(self) -> int:
         return self._vida
-
+    
+    @property
+    def vida_maxima(self) -> int:
+        return self._vida_maxima
+    
     @property
     def dano(self) -> int:
         return self._dano
@@ -47,14 +53,25 @@ class Player:
     @property
     def classe(self) -> str:
         return self._classe
+    
+    @property
+    def nivel(self) -> int:
+        return self._nivel
 
     # Setters para alterar valores com validação:
     @vida.setter
     def vida(self, nova_vida: int):
         if nova_vida < 0:
             raise ValueError('A vida não pode ser negativa.')
-        self._vida = nova_vida
-
+        self._vida = min(nova_vida, self._vida_maxima) # Limita a vida atual à vida máxima
+    
+    @vida_maxima.setter
+    def vida_maxima(self, nova_vida_maxima: int):
+        if nova_vida_maxima < 0:
+            raise ValueError('A vida não pode ser negativa.')
+        self._vida_maxima = nova_vida_maxima
+        self._vida = min(self._vida, self._vida_maxima)
+    
     @dano.setter
     def dano(self, novo_dano: int):
         if novo_dano < 0:
@@ -66,6 +83,12 @@ class Player:
         if novo_exp < 0:
             raise ValueError('A experiência não pode ser negativa.')
         self._exp = novo_exp
+
+    @nivel.setter
+    def nivel(self, novo_nivel: int):
+        if novo_nivel <= 0:
+            raise ValueError('O nivel não pode ser negativo.')
+        self._nivel = novo_nivel
 
     # Atacar o inimigo:
     def atacar_inimigo(self, inimigo: Inimigo) -> None:
