@@ -97,8 +97,40 @@ class Player:
             raise ValueError('Nenhum jogador está em combate com este inimigo.')
         inimigo.receber_dano(self._dano)
 
+    # receber dano do inimigo:
     def receber_dano(self, dano: int) -> None:
         """O inimigo recebe dano e reduz a quantidade de vida."""
         if dano < 0:
             raise ValueError('Dano não pode ser negativo.')
         self._vida = max(self._vida - dano, 0)  # Garante que a vida não fique negativa
+
+    # Calcula o proximo exp:
+    def _calcular_exp_proximo_nivel (self) -> float:
+        """
+        Calcula a procima experiencia necessaria para o proximo nivel, com uma formula:
+            exp.necessaria = 100 x (x^1,5)
+        """
+        return  100 * (self.nivel ** 1.5)
+    
+    # Aumenta a exp do player:
+    def ganhar_exp(self, quantide: float) -> None:
+        """"""
+        self.exp += max(quantide, 0) # Se nao retorna o exp retorna 0
+        self._checar_level_up
+    
+    # Checa se o player pode suber de nivel:
+    def _checar_level_up(self) -> None:
+        """"""
+        while self.exp >= self._calcular_exp_proximo_nivel:
+            self.exp -= self._calcular_exp_proximo_nivel
+            self.nivel += 1
+            self._aumentar_stats()
+            self._calcular_exp_proximo_nivel = self._calcular_exp_proximo_nivel()
+
+    # Aumenta os status do player:
+    def _aumentar_status(self) -> None:
+        """"""
+        self._vida_maxima += 20
+        self._vida = self.vida_maxima
+        self._dano += 5        
+
