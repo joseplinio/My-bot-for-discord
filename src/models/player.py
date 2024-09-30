@@ -113,14 +113,24 @@ class Player:
         return  100 * (self.nivel ** 1.5)
     
     # Aumenta a exp do player:
-    def ganhar_exp(self, quantide: float) -> None:
-        """"""
-        self.exp += max(quantide, 0) # Se nao retorna o exp retorna 0
+    def ganhar_exp(self, quantidade: float) -> None:
+        """
+        Funçao que adiciona uma quantidade de experiencia ao player, e chama o
+        checar o proximo nivel para checar o proximo nivel
+
+        param quantidade: tipo o self._exp (do inimigo) 
+        
+        """
+        self.exp += max(quantidade, 0) # Se nao retorna o exp retorna 0
         self._checar_level_up
     
     # Checa se o player pode suber de nivel:
     def _checar_level_up(self) -> None:
-        """"""
+        """
+        Funçao para verificar o nivel do player sendo que se sua experiencia for 
+        maior ou igual ao resultado da funçao `_calcular_exp_proximo_nivel` ele vai
+        aulmentar o nivel do player, e aulmentar os estados com o a funçao `_aumentar_stats()`
+        """
         while self.exp >= self._calcular_exp_proximo_nivel:
             self.exp -= self._calcular_exp_proximo_nivel
             self.nivel += 1
@@ -129,8 +139,53 @@ class Player:
 
     # Aumenta os status do player:
     def _aumentar_status(self) -> None:
-        """"""
+        """
+        Funçao responsavel por almentar os atributos do player sendo a vida_maxima,
+        vida, dano.
+        """
         self._vida_maxima += 20
         self._vida = self.vida_maxima
         self._dano += 5        
 
+    # Mexer com o sistema de inventario:
+
+    # Adicionar o item no inventaio:
+    def add_item(self, item: str) -> None:
+        """
+        Funçao que adiciona o item no inventario do player
+            param item (str) 
+        """
+        self._inventario.append(item)
+
+    # Remover o item do inventaio:
+    def add_item(self, item: str) -> None:
+        """
+        Funçao que remove o item do inventario, que valida se o item ta no inventario
+        se sim so´ removo, se não da mensagem de erro
+        """
+        if not item in self._inventario:
+            print(f"Você não possui {item} no seu inventário.")
+        self._inventario.remove(item)
+
+    # Usa um determindo item:
+    def usar_item(self, item: str) -> str:
+        """
+        
+        """
+        if not item in self._inventario:
+            return f"Você não possui {item} no seu inventário."
+        
+        if item == "Poção de Cura":
+            cura = 50
+            self._vida = min(self._vida + cura, self._vida_maxima)
+            self._inventario.remove(item)
+            return f"Você usou uma Poção de Cura e recuperou {cura} de vida"
+        
+        if item == "Poção de Cura Melhorada":
+            cura = 100
+            self._vida = min(self._vida + cura, self._vida_maxima)
+            self._inventario.remove(item)
+            return f"Você usou uma Poção de Cura Melhorada e recuperou {cura} de vida"
+        
+        return f"Você não pode usar {item}"
+        
