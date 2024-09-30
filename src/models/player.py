@@ -170,7 +170,9 @@ class Player:
     # Usa um determindo item:
     def usar_item(self, item: str) -> str:
         """
-        
+        Funçao que usa o item, e verifica o item no no self._inventario retornando
+        um erro ou nao dependo do modo:
+            param item (str)
         """
         if not item in self._inventario:
             return f"Você não possui {item} no seu inventário."
