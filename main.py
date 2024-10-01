@@ -53,6 +53,6 @@ async def on_command_error(ctx, error):
         await ctx.send(f'**Sorry. Comando não reconhecido, caso queira ver a lista de comandos digite `!help`.**')
 
 try:
-    bot.run(config['token'])
+    bot.run()
 except Exception as e:
     print(f'ERRO : {e}')

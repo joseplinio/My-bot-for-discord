@@ -110,7 +110,7 @@ class Player:
         Calcula a procima experiencia necessaria para o proximo nivel, com uma formula:
             exp.necessaria = 100 x (x^1,5)
         """
-        return  100 * (self.nivel ** 1.5)
+        return  100 * (self._nivel ** 1.5)
     
     # Aumenta a exp do player:
     def ganhar_exp(self, quantidade: float) -> None:
