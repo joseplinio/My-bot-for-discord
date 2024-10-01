@@ -26,3 +26,18 @@ class CharacterCreation:
         return confirm and confirm.lower().strip()[0] == "s"
     
 
+    async def pergunta_nome(self, ctx) -> Optional[str]:
+        while True:
+            nome  = self.fazer_pergunta(ctx, "**Qual vai ser o nome do seu personagem?**")
+            if not nome:
+                return None
+            
+            nome_limpo = re.sub(r'\s+', '_', nome)
+            nome_limpo = re.sub(r'[<>]', '', nome_limpo)
+
+            if not re.match("^[A-Za-z0-9_-]*$", nome_limpo):
+                await ctx.send("Nome inválido! Use apenas letras, números, hífens e sublinhados.")
+
+
+                # tem que estudar mais para fazer as defs (a logica e facil):
+                # e so colocar em pratica ;] !
