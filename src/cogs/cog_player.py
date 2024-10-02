@@ -22,7 +22,7 @@ class CharacterCreation:
             return None
     
     async def confirma_escolha(self, ctx, choice: str) -> bool:
-        confirm = await self.fazer_pergunta(f'**Você escolheu:** __{choice}__. **Está correto? (sim/não)**') 
+        confirm = await self.fazer_pergunta(ctx, f'**Você escolheu:** __{choice}__. **Está correto? (sim/não)**') 
         return confirm and confirm.lower().strip()[0] == "s"
     
 
@@ -37,7 +37,35 @@ class CharacterCreation:
 
             if not re.match("^[A-Za-z0-9_-]*$", nome_limpo):
                 await ctx.send("Nome inválido! Use apenas letras, números, hífens e sublinhados.")
+                continue
+            
+            if self.confirma_escolha(ctx, nome_limpo):
+                await ctx.send(f'**Ótimo nome,** *{nome_limpo}* **!**')
+                asyncio.sleep(1.5)
+                return nome_limpo
 
 
-                # tem que estudar mais para fazer as defs (a logica e facil):
-                # e so colocar em pratica ;] !
+    async def pergunta_classe(self, ctx) -> Optional[str]:
+        lista_de_classes = ["Herói", "Mago", "Arqueiro", "Guerreiro"]
+
+        def menu():
+            return "\n".join(f"**{idx}** - **{classe}**" for idx, classe in enumerate(lista_de_classes, 1))        
+        
+        while True:
+            await ctx.send("**Qual classe você vai escolher, nobre aventureiro?**'")
+            await ctx.send(menu())
+
+            escolha = self.fazer_pergunta(ctx, "Digite o número correspondente à classe:")
+            if  not escolha:
+                return None
+
+            if escolha.isdigit() and 1 <= int(escolha) <= len(lista_de_classes):
+                classe_escolida = lista_de_classes[escolha - 1]
+                
+                if await self.confirma_escolha(ctx, classe_escolida):
+                    await ctx.send(ctx ,f'**Sua classe é {classe_escolida}**.')
+                    return classe_escolida
+                
+            else:
+                await ctx.send('Resposta inválida. Por favor, escolha um número correspondente à classe.')
+                asyncio.sleep(1.5)
