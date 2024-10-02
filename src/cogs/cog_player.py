@@ -28,7 +28,7 @@ class CharacterCreation:
 
     async def pergunta_nome(self, ctx) -> Optional[str]:
         while True:
-            nome  = self.fazer_pergunta(ctx, "**Qual vai ser o nome do seu personagem?**")
+            nome  =  await self.fazer_pergunta(ctx, "**Qual vai ser o nome do seu personagem?**")
             if not nome:
                 return None
             
@@ -39,9 +39,9 @@ class CharacterCreation:
                 await ctx.send("Nome inválido! Use apenas letras, números, hífens e sublinhados.")
                 continue
             
-            if self.confirma_escolha(ctx, nome_limpo):
+            if await self.confirma_escolha(ctx, nome_limpo):
                 await ctx.send(f'**Ótimo nome,** *{nome_limpo}* **!**')
-                asyncio.sleep(1.5)
+                await asyncio.sleep(1.5)
                 return nome_limpo
 
 
@@ -55,17 +55,17 @@ class CharacterCreation:
             await ctx.send("**Qual classe você vai escolher, nobre aventureiro?**'")
             await ctx.send(menu())
 
-            escolha = self.fazer_pergunta(ctx, "Digite o número correspondente à classe:")
+            escolha =  await self.fazer_pergunta(ctx, "Digite o número correspondente à classe:")
             if  not escolha:
                 return None
 
             if escolha.isdigit() and 1 <= int(escolha) <= len(lista_de_classes):
-                classe_escolida = lista_de_classes[escolha - 1]
+                classe_escolhida = lista_de_classes[ int(escolha) - 1]
                 
-                if await self.confirma_escolha(ctx, classe_escolida):
-                    await ctx.send(ctx ,f'**Sua classe é {classe_escolida}**.')
-                    return classe_escolida
+                if await self.confirma_escolha(ctx, classe_escolhida):
+                    await ctx.send(f'**Sua classe escolhida é {classe_escolhida}**.')
+                    return classe_escolhida
                 
             else:
                 await ctx.send('Resposta inválida. Por favor, escolha um número correspondente à classe.')
-                asyncio.sleep(1.5)
+                await asyncio.sleep(1.5)
