@@ -4,7 +4,7 @@ from typing import Optional
 import asyncio
 
 # Iniando a classe para a cog:
-class CharacterCreation:
+class CriarPersonagem():
     def __init__(self, bot):
         self.bot = bot
 
@@ -36,7 +36,7 @@ class CharacterCreation:
             nome_limpo = re.sub(r'[<>]', '', nome_limpo)
 
             if not re.match("^[A-Za-z0-9_-]*$", nome_limpo):
-                await ctx.send("Nome inválido! Use apenas letras, números, hífens e sublinhados.")
+                await ctx.send("**Nome inválido! Use apenas letras, números, hífens e sublinhados.**")
                 continue
             
             if await self.confirma_escolha(ctx, nome_limpo):
@@ -49,13 +49,13 @@ class CharacterCreation:
         lista_de_classes = ["Herói", "Mago", "Arqueiro", "Guerreiro"]
 
         def menu():
-            return "\n".join(f"**{idx}** - **{classe}**" for idx, classe in enumerate(lista_de_classes, 1))        
+            return "\n".join(f"**{idx}** - **{classe}**" for idx, classe in enumerate(lista_de_classes, 1))      
         
         while True:
             await ctx.send("**Qual classe você vai escolher, nobre aventureiro?**'")
             await ctx.send(menu())
 
-            escolha =  await self.fazer_pergunta(ctx, "Digite o número correspondente à classe:")
+            escolha =  await self.fazer_pergunta(ctx, "**Digite o número correspondente à classe:**")
             if  not escolha:
                 return None
 
@@ -67,5 +67,5 @@ class CharacterCreation:
                     return classe_escolhida
                 
             else:
-                await ctx.send('Resposta inválida. Por favor, escolha um número correspondente à classe.')
+                await ctx.send('**Resposta inválida. Por favor, escolha um número correspondente à classe.**')
                 await asyncio.sleep(1.5)
