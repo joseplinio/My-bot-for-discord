@@ -4,7 +4,7 @@ from typing import Optional
 import asyncio
 
 # Iniando a classe para a cog:
-class CriarPersonagem():
+class MetosCriarPersonagem():
     def __init__(self, bot):
         self.bot = bot
 
@@ -22,7 +22,7 @@ class CriarPersonagem():
             return None
     
     async def confirma_escolha(self, ctx, choice: str) -> bool:
-        confirm = await self.fazer_pergunta(ctx, f'**Você escolheu:** __{choice}__. **Está correto? (sim/não)**') 
+        confirm = await self.fazer_pergunta(ctx, f'**Você escolheu:** __*{choice}*__. **Está correto? (sim/não)**') 
         return confirm and confirm.lower().strip()[0] == "s"
     
 
@@ -40,7 +40,7 @@ class CriarPersonagem():
                 continue
             
             if await self.confirma_escolha(ctx, nome_limpo):
-                await ctx.send(f'**Ótimo nome,** *{nome_limpo}* **!**')
+                await ctx.send(f'**Ótimo nome,** __*{nome_limpo}*__ **!**')
                 await asyncio.sleep(1.5)
                 return nome_limpo
 
@@ -63,7 +63,7 @@ class CriarPersonagem():
                 classe_escolhida = lista_de_classes[ int(escolha) - 1]
                 
                 if await self.confirma_escolha(ctx, classe_escolhida):
-                    await ctx.send(f'**Sua classe escolhida é {classe_escolhida}**.')
+                    await ctx.send(f'**Sua classe escolhida é __*{classe_escolhida}*__ **.')
                     return classe_escolhida
                 
             else:

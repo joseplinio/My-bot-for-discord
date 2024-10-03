@@ -1,5 +1,5 @@
 # Importaçoes:
-from .cog_player import CriarPersonagem 
+from .cog_player import MetosCriarPersonagem 
 from discord.ext import commands
 import discord
 from src.models.inimigo import Inimigo
@@ -13,22 +13,21 @@ class RPGCommands(commands.Cog):
         self.players = {}
         self.batalhas_ativas = {}
     
-    @commands.command(name="criar_personagem")
+    @commands.command()
     async def criar_personagem(self, ctx):
+        """Cria o personagem para o jogo."""
         if ctx.author.id in self.players:
-            await ctx.send("**Você já tem um personagem. Use `!status` para ver suas informações.**")
+            await ctx.send("**Você já tem um personagem. Use ``!status`` para ver suas informações.**")
             return
         
         # Instancia a classe CriarPersonagem para usar as perguntas:
-        criando_personagem = CriarPersonagem(self.bot)
+        criando_personagem = MetosCriarPersonagem(self.bot)
 
         # Pergunta o nome e a classe:
-
         nome = await criando_personagem.pergunta_nome(ctx)
         if not nome:
             await ctx.send("**Criação de personagem cancelada.**")
             return
-        
 
         classe = await criando_personagem.pergunta_classe(ctx)
         if not classe:
@@ -36,9 +35,28 @@ class RPGCommands(commands.Cog):
             return
         
         # Cria o personagem:
-        player = Player(nome, 0, 100, 15, [], 0, classe)
+        player = Player(nome, 1, 100, 15, [], 0, classe)
         self.players[ctx.author.id] = player
-        await ctx.send(f"**Personagem ***{nome}*** da classe ***{classe}*** criado com sucesso!**")
-    
+        await ctx.send(f"**Personagem __*{nome}*__ da classe __*{classe}*__ criado com sucesso!**")
+
+    @commands.command()
+    async def status(self, ctx):
+        """Mostra o status do personagem do usuário."""
+       
+        player = self.players.get(ctx.author.id)
+        if not player:
+            await ctx.send("Você ainda não tem um personagem. Use ``!criar_personagem`` para criar um.")
+            return
+        
+        embed = discord.Embed(title=f"Status de {player.nome}", color= discord.Color.purple())
+        embed.add_field(name="Classe", value=player.classe, inline=True)
+        embed.add_field(name="Nível", value=player.nivel, inline=True)
+        embed.add_field(name="Experiência", value=f"{player.exp}/{player._calcular_exp_proximo_nivel()}", inline=True)
+        embed.add_field(name="Vida", value=f"{player.vida}/{player.vida_maxima}", inline=True)
+        embed.add_field(name="Dano", value=player.dano, inline=True)
+        embed.add_field(name="Inventário", value= ", ".join(player.inventario) if player.inventario else "Vazio", inline=False)      
+        
+        await ctx.send(embed=embed)
+
 async def setup(bot):
     await bot.add_cog(RPGCommands(bot))

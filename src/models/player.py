@@ -7,22 +7,23 @@ class Player:
     Representa um player no jogo.
 
     Atributos:
-        nome (str): O nome do player.
-        vida (int): A quantidade de vida do player.
-        dano (int): O dano que o player pode causar.
-        inventario (list): O inventario do player para carregar os itens.
-        exp (int): A quantidade de experiência que o player possui.
+        nome (str): O nome do player;
+        nivel (int): Nivel do player;
+        vida (int): A quantidade de vida do player;
+        dano (int): O dano que o player pode causar;
+        inventario (list): O inventario do player para carregar os itens;
+        exp (int): A quantidade de experiência que o player possui;
         classe (str): A classe do player (ex.: Guerreiro, Mago).
     """
 
     def __init__(self, nome: str, nivel: int, vida: int, dano: int, inventario: list, exp: int, classe: str):
         self._nome = nome
         self._inventario = inventario
-        self._nivel = nivel
+        self._nivel = max(nivel, 1) # Nivel minimo é 1
         self._vida_maxima = max(vida, 100) # Vida máxima mínima é 100
         self._vida = self._vida_maxima  # Vida inicial é igual à vida máxima
         self._dano = max(dano, 15)  # Dano mínimo é 15
-        self._exp = max(exp, 1)  # Experiência mínima é 1
+        self._exp = max(exp, 0)  # Experiência mínima é 0
         self._classe = classe
     
     # Getters para acessar os atributos de forma controlada:
@@ -90,6 +91,8 @@ class Player:
             raise ValueError('O nivel não pode ser negativo.')
         self._nivel = novo_nivel
 
+    # Funços para o objeto player:
+
     # Atacar o inimigo:
     def atacar_inimigo(self, inimigo: Inimigo) -> None:
         """Jogador ataca o inimigo, causando dano à vida do inimigo."""
@@ -128,8 +131,8 @@ class Player:
     def _checar_level_up(self) -> None:
         """
         Funçao para verificar o nivel do player sendo que se sua experiencia for 
-        maior ou igual ao resultado da funçao `_calcular_exp_proximo_nivel` ele vai
-        aulmentar o nivel do player, e aulmentar os estados com o a funçao `_aumentar_stats()`
+        maior ou igual ao resultado da funçao ``_calcular_exp_proximo_nivel`` ele vai
+        aulmentar o nivel do player, e aulmentar os estados com o a funçao ``_aumentar_stats()``
         """
         while self.exp >= self._calcular_exp_proximo_nivel:
             self.exp -= self._calcular_exp_proximo_nivel
