@@ -2,6 +2,7 @@
 import re
 from typing import Optional
 import asyncio
+import discord
 
 # Iniando a classe para a cog:
 class MetosCriarPersonagem():
@@ -22,13 +23,18 @@ class MetosCriarPersonagem():
             return None
     
     async def confirma_escolha(self, ctx, choice: str) -> bool:
-        confirm = await self.fazer_pergunta(ctx, f'**Você escolheu:** __*{choice}*__. **Está correto? (sim/não)**') 
+        confirm = await self.fazer_pergunta(ctx, f'Você escolheu: **{choice}**. Está correto? **(sim/não)**') 
         return confirm and confirm.lower().strip()[0] == "s"
     
 
     async def pergunta_nome(self, ctx) -> Optional[str]:
         while True:
-            nome  =  await self.fazer_pergunta(ctx, "**Qual vai ser o nome do seu personagem?**")
+            embed = discord.Embed(color=discord.Color.green())
+            embed.add_field(name="*Qual vai ser o nome do seu personagem?*",value=" ", inline=True)
+            
+            await ctx.send(embed=embed)
+
+            nome  =  await self.fazer_pergunta(ctx, "Sua escolha:")
             if not nome:
                 return None
             
@@ -40,7 +46,7 @@ class MetosCriarPersonagem():
                 continue
             
             if await self.confirma_escolha(ctx, nome_limpo):
-                await ctx.send(f'**Ótimo nome,** __*{nome_limpo}*__ **!**')
+                await ctx.send(f'Ótimo nome, **{nome_limpo} !**')
                 await asyncio.sleep(1.5)
                 return nome_limpo
 
@@ -52,10 +58,13 @@ class MetosCriarPersonagem():
             return "\n".join(f"**{idx}** - **{classe}**" for idx, classe in enumerate(lista_de_classes, 1))      
         
         while True:
-            await ctx.send("**Qual classe você vai escolher, nobre aventureiro?**'")
-            await ctx.send(menu())
 
-            escolha =  await self.fazer_pergunta(ctx, "**Digite o número correspondente à classe:**")
+            embed = discord.Embed(color=discord.Color.green())
+            embed.add_field(name="*Qual classe você vai escolher, nobre aventureiro?*", value=menu(), inline=True)
+            
+            await ctx.send(embed=embed)
+
+            escolha =  await self.fazer_pergunta(ctx, "Digite o número correspondente à classe:")
             if  not escolha:
                 return None
 
@@ -63,7 +72,8 @@ class MetosCriarPersonagem():
                 classe_escolhida = lista_de_classes[ int(escolha) - 1]
                 
                 if await self.confirma_escolha(ctx, classe_escolhida):
-                    await ctx.send(f'**Sua classe escolhida é __*{classe_escolhida}*__ **.')
+                    await ctx.send(f'Sua classe escolhida é **{classe_escolhida}** .')
+                    await asyncio.sleep(1.5)
                     return classe_escolhida
                 
             else:

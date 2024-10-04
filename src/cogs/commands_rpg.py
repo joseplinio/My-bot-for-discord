@@ -5,6 +5,7 @@ import discord
 from src.models.inimigo import Inimigo
 from src.models.player import Player
 import random
+from utils.embed_utils import criar_embed
 
 # Classe dos comandos para o RPG:
 class RPGCommands(commands.Cog):
@@ -12,9 +13,9 @@ class RPGCommands(commands.Cog):
         self.bot = bot
         self.players = {}
         self.batalhas_ativas = {}
-    
+
     @commands.command()
-    async def criar_personagem(self, ctx):
+    async def criar(self, ctx):
         """Cria o personagem para o jogo."""
         if ctx.author.id in self.players:
             await ctx.send("**Você já tem um personagem. Use ``!status`` para ver suas informações.**")
@@ -35,27 +36,40 @@ class RPGCommands(commands.Cog):
             return
         
         # Cria o personagem:
-        player = Player(nome, 1, 100, 15, [], 0, classe)
+        player = Player(nome, 1, 100, 15, ["Espada","Ola mundo"], 0, classe)
         self.players[ctx.author.id] = player
-        await ctx.send(f"**Personagem __*{nome}*__ da classe __*{classe}*__ criado com sucesso!**")
+        embed =  await criar_embed(
+            descriçao=f"**Personagem *{player.nome}* classe *{player.classe}* foi criado com sucesso!**",
+            color=discord.Color.purple(),
+            campos=[
+                ["**[Dica]**", "**Use ``!status`` para ver suas informaçoes.**", True]
+            ]
+        )
+        
+        await ctx.send(embed=embed)
 
     @commands.command()
-    async def status(self, ctx):
+    async def sta(self, ctx):
         """Mostra o status do personagem do usuário."""
        
         player = self.players.get(ctx.author.id)
         if not player:
-            await ctx.send("Você ainda não tem um personagem. Use ``!criar_personagem`` para criar um.")
+            await ctx.send("**Você ainda não tem um personagem. Use ``!criar_personagem`` para criar um.**")
             return
         
-        embed = discord.Embed(title=f"Status de {player.nome}", color= discord.Color.purple())
-        embed.add_field(name="Classe", value=player.classe, inline=True)
-        embed.add_field(name="Nível", value=player.nivel, inline=True)
-        embed.add_field(name="Experiência", value=f"{player.exp}/{player._calcular_exp_proximo_nivel()}", inline=True)
-        embed.add_field(name="Vida", value=f"{player.vida}/{player.vida_maxima}", inline=True)
-        embed.add_field(name="Dano", value=player.dano, inline=True)
-        embed.add_field(name="Inventário", value= ", ".join(player.inventario) if player.inventario else "Vazio", inline=False)      
-        
+        embed = await criar_embed(
+            titulo=f"Status de {player.nome}",
+            color=discord.Color.purple(),
+            campos=[
+                ["Classe", player.classe, True],
+                ["Nível", player.nivel, True],
+                ["Experiência",f"{player.exp}/{player._calcular_exp_proximo_nivel():.2f}", True],
+                ["Vida", f"{player.vida}/{player.vida_maxima}", True],
+                ["Dano", player.dano, True],
+                ["Inventário", ", ".join(player.inventario) if player.inventario else "Vazio", False],        
+            ]
+        )
+            
         await ctx.send(embed=embed)
 
 async def setup(bot):
