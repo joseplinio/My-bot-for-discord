@@ -136,3 +136,14 @@ class Inimigo:
             raise ValueError("Nenhum jogador está associado a este inimigo.")
         self._checar_e_ajustar_nivel()
 
+    # Checha se pode melhorar o inimigo:
+    def _checar_e_ajustar_nivel(self) -> None:
+        """
+        Verifica o nível do player e ajusta os atributos do inimigo de forma proporcional.
+        """
+        while self._player._nivel >= self._nivel:
+            self._nivel += 1
+            self._vida_maxima += self._player._nivel * 120  
+            self._dano += self._player._nivel + 5
+            self._exp += self._player._nivel + 10
+        self._vida = self._vida_maxima
