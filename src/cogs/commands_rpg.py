@@ -106,7 +106,67 @@ class RPGCommands(commands.Cog):
             print(f"ERRO: {e}")
 
     @commands.command()
+    async def atacar(self, ctx):
+        """Usado para atacar o inimigo durante uma batalha"""
+        
+        player = self.players.get(ctx.author.id)
+        inimigo = self.batalhas_ativas.get(ctx.author.id)
+
+        if not player or not inimigo:
+            await ctx.send("**Você não está em uma batalha!**")
+            return
+        
+        player.atacar_inimigo(inimigo)
+        embed = criar_embed(
+            titulo="Seu turno:",
+            color=discord.Color.purple(),
+            campos=[
+                ["Ataque; ", f"Você atacou o {inimigo.nome} e causou {player.dano} de dano!", False],
+                ["Vida do inimigo: ", inimigo.vida, True]
+            ]
+        )
+
         await ctx.send(embed=embed)
+        
+        if inimigo.vida <= 0:
+            exp, recompensas = inimigo.morrer()
+            player.ganhar_exp(exp)
+            for item in recompensas:
+                player.add_item(item)
+        
+            embed = criar_embed(
+                titulo="Vitória!",
+                descricao=f"Você derrotou o {inimigo.nome}!",
+                campos=[
+                    ["Recompensas", f"Exp: {inimigo.exp}\n Items: {", ".join(recompensas)}", False]
+                ]
+            )
+
+            await ctx.send(embed=embed)
+            del self.batalhas_ativas[ctx.author.id]
+
+        else:
+            nome_inimigo, dano_inimigo = inimigo.atacar_jogador()
+            embed = criar_embed(
+                titulo="Turno do Inimigo:",
+                color= discord.Color.purple(),
+                campos=[
+                    ["Ataque do inimigo: ", f"O {nome_inimigo} atacou você e causou {dano_inimigo} de dano!", False],
+                    ["Resulatado da batalha", f"Sua vida {player.vida}/{player.vida_maxima}\n Vida do inimigo: {inimigo.vida}"],
+                ]
+            )
+
+            if player.vida <= 0:
+                embed = criar_embed(
+                    titulo="Lamentavel",
+                    color= discord.Color.purple(),
+                    campos=[
+                        ["Derrota", "Voce foi derrotado(a)", False]
+                    ]
+                )
+                await ctx.send(embed=embed)
+                del self.batalhas_ativas[ctx.author.id]
+
 
 async def setup(bot):
     await bot.add_cog(RPGCommands(bot))
