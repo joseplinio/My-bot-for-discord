@@ -3,9 +3,9 @@ import discord
 from typing import Optional
 
 # Code:
-async def criar_embed(
+def criar_embed(
     titulo: Optional[str] = None,
-    descriçao: Optional[str] = None,
+    descricao: Optional[str] = None,
     color: discord.Color = discord.Color.default(),
     campos: Optional[list] = None
     ) -> discord.Embed:
@@ -20,7 +20,7 @@ async def criar_embed(
     Returns:
         discord.Embed: O embed customizado.
     """
-    embed = discord.Embed(title=titulo or "", description=descriçao or "", color=color)
+    embed = discord.Embed(title=titulo or "", description=descricao or "", color=color)
 
     if campos:
         for nome, value, inline in campos:
