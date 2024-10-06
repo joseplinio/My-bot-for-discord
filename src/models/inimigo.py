@@ -98,13 +98,13 @@ class Inimigo:
     # Gera a recompensa do inimigo:
     def _gerar_recompensas(self) -> list:
         recompensas = []
-        if random.random < 0.5:
+        if random.random() < 0.5:
             recompensas.append("Poção de Cura")
         
-        if random.random < 0.3:
+        if random.random() < 0.3:
             recompensas.append("Moeda de Ouro")
         
-        if random.random < 0.1:
+        if random.random() < 0.1:
             recompensas.append("Item Raro")
         
         return recompensas
