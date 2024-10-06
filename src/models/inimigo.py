@@ -23,6 +23,7 @@ class Inimigo:
         self._player = None
         self._descricao = descricao if descricao else self._gerar_descricao()
         self._recompensas = self._gerar_recompensas()
+        self._morto = False
         
     # Getters para acessar os atributos de forma controlada:
     @property
@@ -32,6 +33,10 @@ class Inimigo:
     @property
     def vida(self) -> int:
         return self._vida
+    
+    @property
+    def vida_maxima(self) -> int:
+        return self._vida_maxima
 
     @property
     def dano(self) -> int:
@@ -48,6 +53,14 @@ class Inimigo:
     @property
     def nivel(self) -> int:
         return self._nivel
+    
+    @property
+    def esta_morto(self) -> bool:
+        return self._morto
+    
+    @property
+    def recompensas(self) -> list:
+        return self._recompensas.copy()
     
     # Setters para alterar valores com validação:
     @vida.setter
@@ -84,6 +97,9 @@ class Inimigo:
     # Ataca o jogador:
     def atacar_jogador(self) -> tuple:
         """Inimigo ataca o jogador, causando dano à vida do jogador."""
+        if Inimigo.esta_morto:
+            return
+    
         if self._player:
             dano_causado = random.randint(self._dano + 2, self._dano - 2)
             self._player.receber_dano(dano_causado)
@@ -94,10 +110,15 @@ class Inimigo:
     # Recebe o dano:
     def receber_dano(self, dano: int) -> None:
         """O inimigo recebe dano e reduz a quantidade de vida."""
+        if self.esta_morto:
+            return
+        
         if dano < 0:
             raise ValueError('Dano não pode ser negativo.')
         self._vida = max(self._vida - dano, 0)  # Garante que a vida não fique negativa
 
+        if self.vida == 0:
+            self.esta_morto = True
     # Gera um descriçao para o inimigo:
     def _gerar_descricao(self) -> str:
         """Faz com o inimigo receba uma descrição aleatoria com ações e adjetivos para a descrição"""
@@ -108,6 +129,9 @@ class Inimigo:
     
     # Gera a recompensa do inimigo:
     def _gerar_recompensas(self) -> list:
+        if Inimigo.esta_morto:
+            return
+
         recompensas = []
         if random.random() < 0.5:
             recompensas.append("Poção de Cura")
@@ -125,6 +149,10 @@ class Inimigo:
     # inimigo morre:
     def morrer(self) -> tuple:
         """Retorna a experiência e as recompensas quando o inimigo morre."""
+        if hasattr(self, "_morto") and self._morto:
+            return 0, []
+        
+        self._morto = True     
         return  self._exp, self._recompensas 
     
     # O inimigo e melhorado:
@@ -147,3 +175,4 @@ class Inimigo:
             self._dano += self._player._nivel + 5
             self._exp += self._player._nivel + 10
         self._vida = self._vida_maxima
+        
