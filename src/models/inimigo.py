@@ -13,12 +13,13 @@ class Inimigo:
         exp (int): A quantidade de experiência que o inimigo fornece ao ser derrotado.
     """
 
-    def __init__(self, nome: str, vida: int, dano: int, exp: int, descricao: str = None):
+    def __init__(self, nome: str, vida: int,nivel: int, dano: int, exp: int, descricao: str = None):
         self._nome = nome
-        self._vida_maxima = max(vida, 100) # Vida máxima mínima é 100
+        self._nivel = max(nivel, 1) # Nivel minimo e de 1;
+        self._vida_maxima = max(vida, 100) # Vida máxima mínima é 100;
         self._vida = self._vida_maxima
-        self._dano = max(dano, 15)  # Dano mínimo é 15
-        self._exp = max(exp, 20)  # Experiência mínima é 20
+        self._dano = max(dano, 15)  # Dano mínimo é 15;
+        self._exp = max(exp, 20)  # Experiência mínima é 20;
         self._player = None
         self._descricao = descricao if descricao else self._gerar_descricao()
         self._recompensas = self._gerar_recompensas()
@@ -44,6 +45,10 @@ class Inimigo:
     def descricao(self) -> str:
         return self._descricao
     
+    @property
+    def nivel(self) -> int:
+        return self._nivel
+    
     # Setters para alterar valores com validação:
     @vida.setter
     def vida(self, nova_vida: int) -> None:
@@ -62,6 +67,12 @@ class Inimigo:
         if novo_exp < 0:
             raise ValueError('A experiência não pode ser negativa.')
         self._exp = novo_exp
+
+    @nivel.setter
+    def nivel(self, novo_nivel: int) -> None:
+        if novo_nivel <= 0:
+            raise ValueError("O nível não pode ser negativo")
+        self._nivel += random.randint(novo_nivel + 2, novo_nivel - 2)
 
     # Adiciona o jogador ao combate:
     def adiciona_jogador_ao_combate(self, player):
@@ -109,6 +120,10 @@ class Inimigo:
         
         return recompensas
     
+    # Eventos:
+    
+    # inimigo morre:
     def morrer(self) -> tuple:
         """Retorna a experiência e as recompensas quando o inimigo morre."""
         return  self._exp, self._recompensas 
+    
