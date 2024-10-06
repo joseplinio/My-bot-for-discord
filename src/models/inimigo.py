@@ -127,3 +127,12 @@ class Inimigo:
         """Retorna a experiência e as recompensas quando o inimigo morre."""
         return  self._exp, self._recompensas 
     
+    # O inimigo e melhorado:
+    def melhorar_inimigo(self) -> None:
+        """
+        Função responsável por aumentar os atributos do inimigo com base no nível do player.
+        """
+        if self._player is None:
+            raise ValueError("Nenhum jogador está associado a este inimigo.")
+        self._checar_e_ajustar_nivel()
+
