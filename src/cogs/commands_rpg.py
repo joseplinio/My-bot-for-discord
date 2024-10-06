@@ -167,6 +167,19 @@ class RPGCommands(commands.Cog):
                 await ctx.send(embed=embed)
                 del self.batalhas_ativas[ctx.author.id]
 
+    @commands.command()
+    async def fugir(self, ctx, inimigo: str) -> None:
+        """Usado para fugir de um combate"""
+        player = self.players.get(ctx.author.id)
+    
+        if not player:
+            await ctx.send("**Você ainda não tem um personagem. Use ``!criar_personagem`` para criar um.**")
+            return
+        
+        if ctx.author.id in self.batalhas_ativas:
+            await ctx.send("**Você já está em uma batalha!**")
+            return
+        
 
 async def setup(bot):
     await bot.add_cog(RPGCommands(bot))
