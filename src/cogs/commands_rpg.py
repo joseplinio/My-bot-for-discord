@@ -15,7 +15,7 @@ class RPGCommands(commands.Cog):
         self.batalhas_ativas = {}
 
     @commands.command()
-    async def criar(self, ctx):
+    async def c(self, ctx):
         """Cria o personagem para o jogo."""
         if ctx.author.id in self.players:
             await ctx.send("**Você já tem um personagem. Use ``!status`` para ver suas informações.**")
@@ -36,10 +36,10 @@ class RPGCommands(commands.Cog):
             return
         
         # Cria o personagem:
-        player = Player(nome, 1, 100, 15, ["Espada","Ola mundo"], 0, classe)
+        player = Player(nome, 1, 100, 15, [], 0, classe)
         self.players[ctx.author.id] = player
-        embed =  await criar_embed(
-            descriçao=f"**Personagem *{player.nome}* classe *{player.classe}* foi criado com sucesso!**",
+        embed = criar_embed(
+            descricao=f"**Personagem *{player.nome}* classe *{player.classe}* foi criado com sucesso!**",
             color=discord.Color.purple(),
             campos=[
                 ["**[Dica]**", "**Use ``!status`` para ver suas informaçoes.**", True]
@@ -49,7 +49,7 @@ class RPGCommands(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def sta(self, ctx):
+    async def status(self, ctx):
         """Mostra o status do personagem do usuário."""
        
         player = self.players.get(ctx.author.id)
@@ -57,7 +57,7 @@ class RPGCommands(commands.Cog):
             await ctx.send("**Você ainda não tem um personagem. Use ``!criar_personagem`` para criar um.**")
             return
         
-        embed = await criar_embed(
+        embed = criar_embed(
             titulo=f"Status de {player.nome}",
             color=discord.Color.purple(),
             campos=[
@@ -69,7 +69,43 @@ class RPGCommands(commands.Cog):
                 ["Inventário", ", ".join(player.inventario) if player.inventario else "Vazio", False],        
             ]
         )
+        
+        await ctx.send(embed=embed)
             
+    @commands.command()
+    async def lutar(self, ctx):
+        """Inicia uma luta contra um inimigo aleatório."""
+        try:
+            player = self.players.get(ctx.author.id)
+        
+            if not player:
+                await ctx.send("**Você ainda não tem um personagem. Use ``!criar_personagem`` para criar um.**")
+                return
+            
+            if ctx.author.id in self.batalhas_ativas:
+                await ctx.send("**Você já está em uma batalha!**")
+                return
+            
+            inimigo = Inimigo("Dragao", random.randint(100, 120), random.randint(15, 20), 50)
+            self.batalhas_ativas[ctx.author.id] = inimigo
+
+            inicio_batlha = criar_embed(
+                titulo="Batalha Iniciada!",
+                descricao=f"Voce encontrou o {inimigo.nome}\n{inimigo.descricao}",
+                color= discord.Color.purple(),
+                campos=[
+                    ["Vida do Inimigo", inimigo.vida, True],
+                    ["Sua vida", f"{player.vida}/{player.vida_maxima}", True],
+                    ["Comando", "Use !atacar para atacar o inimigo ou !fugir para tentar escapar.", False]
+                ]
+            )
+
+            await ctx.send(embed=inicio_batlha)
+
+        except Exception as e:
+            print(f"ERRO: {e}")
+
+    @commands.command()
         await ctx.send(embed=embed)
 
 async def setup(bot):
