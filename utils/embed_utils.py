@@ -9,7 +9,8 @@ def criar_embed(
     color: discord.Color = discord.Color.default(),
     campos: Optional[list] = None
     ) -> discord.Embed:
-    """Cria e retorna um embed customizado.
+    """
+    Cria e retorna um embed customizado.
     
     Args:
         title (Optional[str]): O título do embed.

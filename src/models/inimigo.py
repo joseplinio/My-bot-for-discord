@@ -97,11 +97,11 @@ class Inimigo:
     # Ataca o jogador:
     def atacar_jogador(self) -> tuple:
         """Inimigo ataca o jogador, causando dano à vida do jogador."""
-        if Inimigo.esta_morto:
+        if self.esta_morto:
             return
     
         if self._player:
-            dano_causado = random.randint(self._dano + 2, self._dano - 2)
+            dano_causado = random.randint(self.dano + 2, self.dano - 2)
             self._player.receber_dano(dano_causado)
             return self._nome, dano_causado
         else:
