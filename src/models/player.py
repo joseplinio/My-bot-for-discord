@@ -16,9 +16,9 @@ class Player:
         classe (str): A classe do player (ex.: Guerreiro, Mago).
     """
 
-    def __init__(self, nome: str, nivel: int, vida: int, dano: int, inventario: list, exp: int, classe: str):
+    def __init__(self, nome: str, nivel: int, vida: int, dano: int, inventario: dict, exp: int, classe: str):
         self._nome = nome # Uma String;
-        self._inventario = inventario # Uma lista;
+        self._inventario = inventario # Um dicionario;
         self._nivel = max(nivel, 1) # Nivel minimo é 1;
         self._vida_maxima = max(vida, 100) # Vida máxima mínima é 100;
         self._vida = self._vida_maxima  # Vida inicial é igual à vida máxima;
@@ -167,10 +167,21 @@ class Player:
     # Adicionar o item no inventaio:
     def add_item(self, item: str) -> None:
         """
-        Funçao que adiciona o item no inventario do player
+        Funçao que adiciona o item no inventario do player, com validaçoa do item
             param item (str) 
         """
-        self._inventario.append(item)
+        if item in self.inventario:
+            self.inventario[item] += 1
+
+        self.inventario[item] = 1
+
+    # Exibi inventario:
+    def exibir_inventario(self) -> str:
+        if not self.inventario:
+            return "Vazio"
+        
+        # entender o que acontece aqui:
+        # return ", ".join(f"{item} ({quantidade})" if )
 
     # Remover o item do inventaio:
     def remove_item(self, item: str) -> None:

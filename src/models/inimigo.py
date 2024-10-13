@@ -145,7 +145,7 @@ class Inimigo:
     
     # Gera a recompensa do inimigo:
     def _gerar_recompensas(self) -> list:
-        
+        """Rotorna uma lista de items que podem serem dropasdos pelo inimio"""
         recompensas = []
         if random.random() < 0.5:
             recompensas.append("Poção de Cura")

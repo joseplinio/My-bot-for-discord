@@ -71,7 +71,7 @@ class RPGCommands(commands.Cog):
                 campos=[
                     ["Classe", player.classe, True],
                     ["Nível", player.nivel, True],
-                    ["Experiência",f"{player.exp}/{player.calcular_exp_proximo_nivel():.2f}", True],
+                    ["Experiência",f"{player.exp:.2f}/{player.calcular_exp_proximo_nivel():.2f}", True],
                     ["Vida", f"{player.vida}/{player.vida_maxima}", True],
                     ["Dano", player.dano, True],
                     ["Inventário", ", ".join(player.inventario) if player.inventario else "Vazio", False],        
