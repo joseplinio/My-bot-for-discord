@@ -17,15 +17,15 @@ class Player:
     """
 
     def __init__(self, nome: str, nivel: int, vida: int, dano: int, inventario: list, exp: int, classe: str):
-        self._nome = nome
-        self._inventario = inventario
-        self._nivel = max(nivel, 1) # Nivel minimo é 1
-        self._vida_maxima = max(vida, 100) # Vida máxima mínima é 100
-        self._vida = self._vida_maxima  # Vida inicial é igual à vida máxima
-        self._dano = max(dano, 15)  # Dano mínimo é 15
-        self._exp = max(exp, 0)  # Experiência mínima é 0
-        self._classe = classe
-    
+        self._nome = nome # Uma String;
+        self._inventario = inventario # Uma lista;
+        self._nivel = max(nivel, 1) # Nivel minimo é 1;
+        self._vida_maxima = max(vida, 100) # Vida máxima mínima é 100;
+        self._vida = self._vida_maxima  # Vida inicial é igual à vida máxima;
+        self._dano = max(dano, 15)  # Dano mínimo é 15;
+        self._exp = max(exp, 0)  # Experiência mínima é 0;
+        self._classe = classe # Classe e igual e classe ;]
+       
     # Getters para acessar os atributos de forma controlada:
     @property
     def nome(self) -> str:
@@ -94,21 +94,32 @@ class Player:
     # Funços para o objeto player:
 
     # Atacar o inimigo:
-    def atacar_inimigo(self, inimigo: Inimigo) -> None:
+    def atacar_inimigo(self, inimigo: Inimigo) -> tuple:
         """Jogador ataca o inimigo, causando dano à vida do inimigo."""
         if not isinstance(inimigo, Inimigo):
-            raise ValueError('Nenhum jogador está em combate com este inimigo.')
-        inimigo.receber_dano(self._dano)
+            raise ValueError('O objeto passado não é um inimigo válido.')
+        
+        if inimigo.esta_morto:
+            print("O inimigo ja esta morto")
+            return
+
+        if inimigo._player is None:
+            inimigo.adicionar_jogador_ao_combate(self)
+
+        if inimigo._player != self:
+            raise ValueError("Nenhum jogador está em combate com este inimigo.")
+        
+        inimigo.receber_dano(self.dano)
 
     # receber dano do inimigo:
     def receber_dano(self, dano: int) -> None:
         """O inimigo recebe dano e reduz a quantidade de vida."""
         if dano < 0:
             raise ValueError('Dano não pode ser negativo.')
-        self._vida = max(self._vida - dano, 0)  # Garante que a vida não fique negativa
+        self._vida = max(self.vida - dano, 0)  # Garante que a vida não fique negativa
 
     # Calcula o proximo exp:
-    def _calcular_exp_proximo_nivel (self) -> float:
+    def calcular_exp_proximo_nivel (self) -> float:
         """
         Calcula a procima experiencia necessaria para o proximo nivel, com uma formula:
             exp.necessaria = 100 x (x^1,5)
@@ -124,8 +135,9 @@ class Player:
         param quantidade: tipo o self._exp (do inimigo) 
         
         """
+        
         self.exp += max(quantidade, 0) # Se nao retorna o exp retorna 0
-        self._checar_level_up
+        self._checar_level_up()
     
     # Checa se o player pode suber de nivel:
     def _checar_level_up(self) -> None:
@@ -134,14 +146,13 @@ class Player:
         maior ou igual ao resultado da funçao ``_calcular_exp_proximo_nivel`` ele vai
         aulmentar o nivel do player, e aulmentar os estados com o a funçao ``_aumentar_stats()``
         """
-        while self.exp >= self._calcular_exp_proximo_nivel:
-            self.exp -= self._calcular_exp_proximo_nivel
+        while self.exp >= self.calcular_exp_proximo_nivel():
+            self.exp -= self.calcular_exp_proximo_nivel()
             self.nivel += 1
-            self._aumentar_stats()
-            self._calcular_exp_proximo_nivel = self._calcular_exp_proximo_nivel()
+            self.aumentar_status()
 
     # Aumenta os status do player:
-    def _aumentar_status(self) -> None:
+    def aumentar_status(self) -> None:
         """
         Funçao responsavel por almentar os atributos do player sendo a vida_maxima,
         vida, dano.
@@ -149,6 +160,7 @@ class Player:
         self._vida_maxima += 20
         self._vida = self.vida_maxima
         self._dano += 5        
+        self.calcular_exp_proximo_nivel()
 
     # Mexer com o sistema de inventario:
 
@@ -161,7 +173,7 @@ class Player:
         self._inventario.append(item)
 
     # Remover o item do inventaio:
-    def add_item(self, item: str) -> None:
+    def remove_item(self, item: str) -> None:
         """
         Funçao que remove o item do inventario, que valida se o item ta no inventario
         se sim so´ removo, se não da mensagem de erro

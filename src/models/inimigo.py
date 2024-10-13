@@ -17,13 +17,13 @@ class Inimigo:
         self._nome = nome
         self._nivel = max(nivel, 1) # Nivel minimo e de 1;
         self._vida_maxima = max(vida, 100) # Vida máxima mínima é 100;
-        self._vida = self._vida_maxima
+        self._vida = self._vida_maxima # vida e igual a vida_maxima
         self._dano = max(dano, 15)  # Dano mínimo é 15;
         self._exp = max(exp, 20)  # Experiência mínima é 20;
-        self._player = None
-        self._descricao = descricao if descricao else self._gerar_descricao()
+        self._player = None # No inicio ele nao existe;
+        self._descricao = descricao if descricao else self._gerar_descricao() # Gerar a descriçao;
         self._recompensas = self._gerar_recompensas()
-        self._morto = False
+        self._morto = False # Inimigo vivo no incio.
         
     # Getters para acessar os atributos de forma controlada:
     @property
@@ -84,54 +84,68 @@ class Inimigo:
     @nivel.setter
     def nivel(self, novo_nivel: int) -> None:
         if novo_nivel <= 0:
-            raise ValueError("O nível não pode ser negativo")
-        self._nivel += random.randint(novo_nivel + 2, novo_nivel - 2)
+            raise ValueError("O nível não pode ser negativo ou zero.")
+        self._nivel = novo_nivel
+
+    @esta_morto.setter
+    def esta_morto(self, valor: bool) -> None:
+        if not  isinstance(valor, bool):
+            raise ValueError("O valor de 'esta_morto deve ser do tipo booleano.")
+        self._morto = valor
+        
+    # Funços para o inimigo:
 
     # Adiciona o jogador ao combate:
-    def adiciona_jogador_ao_combate(self, player):
+    def adicionar_jogador_ao_combate(self, player):
         from .player import Player
         if not isinstance(player, Player):
             raise ValueError('O objeto passado não é um Player.')
         self._player = player
 
     # Ataca o jogador:
-    def atacar_jogador(self) -> tuple:
+    def atacar_jogador(self, player) -> None:
         """Inimigo ataca o jogador, causando dano à vida do jogador."""
         if self.esta_morto:
-            return
-    
-        if self._player:
-            dano_causado = random.randint(self.dano + 2, self.dano - 2)
-            self._player.receber_dano(dano_causado)
-            return self._nome, dano_causado
-        else:
-            raise ValueError('Nenhum jogador está em combate com este inimigo.')
+           raise ValueError('O Inimigo esta morto.')
+        
+        if self._player is None:
+            self._player = player
 
+        if self._player != player:
+            raise ValueError('Nenhum jogador está em combate com este inimigo.')
+        
+        self._player.receber_dano(self.dano)
+        
+        return self.nome, self.dano 
+
+        
+            
     # Recebe o dano:
     def receber_dano(self, dano: int) -> None:
         """O inimigo recebe dano e reduz a quantidade de vida."""
         if self.esta_morto:
             return
         
-        if dano < 0:
-            raise ValueError('Dano não pode ser negativo.')
-        self._vida = max(self._vida - dano, 0)  # Garante que a vida não fique negativa
-
         if self.vida == 0:
             self.esta_morto = True
+        
+        if dano < 0:
+            raise ValueError('Dano não pode ser negativo.')
+        self.vida = max(self.vida - dano, 0)  # Garante que a vida não fique negativa
+
+        
+
     # Gera um descriçao para o inimigo:
     def _gerar_descricao(self) -> str:
         """Faz com o inimigo receba uma descrição aleatoria com ações e adjetivos para a descrição"""
         adjetivo = ["feroz", "assustador", "imponente", "misterioso", "ágil"]
         acoes =  ["espreita nas sombras", "olha fixamente para você", "prepara-se para atacar", "emite um som ameaçador"]
         
-        return f"Um {random.choice(adjetivo)} {self._nome} que {random.choice(acoes)}."
+        return f"o(a) {random.choice(adjetivo)} {self.nome} que {random.choice(acoes)}."
     
     # Gera a recompensa do inimigo:
     def _gerar_recompensas(self) -> list:
-        if Inimigo.esta_morto:
-            return
-
+        
         recompensas = []
         if random.random() < 0.5:
             recompensas.append("Poção de Cura")
@@ -152,8 +166,9 @@ class Inimigo:
         if hasattr(self, "_morto") and self._morto:
             return 0, []
         
-        self._morto = True     
-        return  self._exp, self._recompensas 
+        self.esta_morto = True
+
+        return self.exp, self.recompensas
     
     # O inimigo e melhorado:
     def melhorar_inimigo(self) -> None:
@@ -162,10 +177,10 @@ class Inimigo:
         """
         if self._player is None:
             raise ValueError("Nenhum jogador está associado a este inimigo.")
-        self._checar_e_ajustar_nivel()
+        self.checar_e_ajustar_nivel()
 
     # Checha se pode melhorar o inimigo:
-    def _checar_e_ajustar_nivel(self) -> None:
+    def checar_e_ajustar_nivel(self) -> None:
         """
         Verifica o nível do player e ajusta os atributos do inimigo de forma proporcional.
         """
