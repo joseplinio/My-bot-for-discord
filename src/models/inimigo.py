@@ -103,7 +103,7 @@ class Inimigo:
         self._player = player
 
     # Ataca o jogador:
-    def atacar_jogador(self, player) -> None:
+    def atacar_jogador(self, player) -> tuple:
         """Inimigo ataca o jogador, causando dano à vida do jogador."""
         if self.esta_morto:
            raise ValueError('O Inimigo esta morto.')
