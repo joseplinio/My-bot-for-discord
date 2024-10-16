@@ -3,6 +3,7 @@ import re
 from typing import Optional
 import asyncio
 import discord
+from utils.embed_utils import criar_embed
 
 # Iniando a classe para a cog:
 class MetosCriarPersonagem():
@@ -29,10 +30,13 @@ class MetosCriarPersonagem():
 
     async def pergunta_nome(self, ctx) -> Optional[str]:
         while True:
-            embed = discord.Embed(color=discord.Color.green())
-            embed.add_field(name="*Qual vai ser o nome do seu personagem?*",value=" ", inline=True)
             
-            await ctx.send(embed=embed)
+            await ctx.send(embed=criar_embed(
+                color=discord.Color.green(),
+                campos=[
+                    ["*Qual vai ser o nome do seu personagem?*", "", True]
+                ]
+            ))
 
             nome  =  await self.fazer_pergunta(ctx, "Sua escolha:")
             if not nome:
@@ -58,12 +62,14 @@ class MetosCriarPersonagem():
             return "\n".join(f"**{idx}** - **{classe}**" for idx, classe in enumerate(lista_de_classes, 1))      
         
         while True:
-
-            embed = discord.Embed(color=discord.Color.green())
-            embed.add_field(name="*Qual classe você vai escolher, nobre aventureiro?*", value=menu(), inline=True)
             
-            await ctx.send(embed=embed)
-
+            await ctx.send(embed=criar_embed(
+                color=discord.Color.green(),
+                campos=[
+                    ["*Qual classe você vai escolher, nobre aventureiro?*", menu(), True]
+                ]
+            ))
+            
             escolha =  await self.fazer_pergunta(ctx, "Digite o número correspondente à classe:")
             if  not escolha:
                 return None

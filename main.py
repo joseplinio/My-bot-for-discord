@@ -41,14 +41,14 @@ async def on_member_join(member):
 async def on_command_error(ctx, error):
     if isinstance(error, CommandNotFound):
         await ctx.send(f'**Sorry. Comando não reconhecido, caso queira ver a lista de comandos digite `!help`.**')
-
+        
 # Função principal para carregar os cogs:
 async def load_cogs():
     try:
         await bot.load_extension('src.cogs.commands_rpg')
     except Exception as e:
         print(f"Erro ao carregar cogs: {e}")
- 
+
 # Iniciar o bot e carregar cogs
 async def main():
     async with bot:
