@@ -197,13 +197,42 @@ class RPGCommands(commands.Cog):
     @commands.command()
     async def fugir(self, ctx) -> None:
         """Usado para fugir de um combate"""
+        try:
 
-        player = self.players.get(ctx.author.id)
-        inimigo = self.batalhas_ativas.get(ctx.author.id)
+            player = self.players.get(ctx.author.id)
+    
+            if not ctx.author.id in self.batalhas_ativas:
+                await ctx.send("**Você não está em uma batalha!**")
+                return
 
-        if not player or not inimigo:
-            await ctx.send("**Você não está em uma batalha!**")
-            return
+            if random.random() < 0.:
+                del self.batalhas_ativas[ctx.author.id]
+                await ctx.send("Você conseguiu fugir com sucesso!")
 
+            else:
+                inimigo = self.batalhas_ativas.get(ctx.author.id)
+                nome_inimigo, dano_inimigo = inimigo.atacar_jogador(player)
+                await ctx.send(embed=criar_embed(
+                        titulo="``[Turno do Inimigo]``",
+                        color=discord.Color.red(),
+                        campos=[
+                            ["", f"Você falhou em fugir! O {nome_inimigo} atacou você e causou {dano_inimigo} de dano!", False],
+                            ["Sua Vida: ", f"``{player.vida}/{player.vida_maxima}``", False]
+                        ]
+                    ))
+                
+                if player.vida <= 0:
+
+                    await ctx.send(embed=criar_embed(
+                        titulo="``Derrota :``",
+                        descricao=f"Voce foi derrotada pelo ``{inimigo.nome}``\n nao fique mal, *você sempre pode tentar de novo !*",
+                        color= discord.Color.red(),
+                    ))
+                        
+                    del self.batalhas_ativas[ctx.author.id]
+
+        except Exception:
+            print(traceback.format_exc())
+       
 async def setup(bot):
     await bot.add_cog(RPGCommands(bot))
