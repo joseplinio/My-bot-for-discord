@@ -8,12 +8,13 @@ class Inimigo:
 
     Atributos:
         nome (str): O nome do inimigo.
+        nivel (int): NIvel do inimigo.
         vida (int): A quantidade de vida do inimigo.
         dano (int): O dano que o inimigo pode causar.
         exp (int): A quantidade de experiência que o inimigo fornece ao ser derrotado.
     """
 
-    def __init__(self, nome: str, vida: int,nivel: int, dano: int, exp: int, descricao: str = None):
+    def __init__(self, nome: str, vida: int, nivel: int, dano: int, exp: int, descricao: str = None):
         self._nome = nome
         self._nivel = max(nivel, 1) # Nivel minimo e de 1;
         self._vida_maxima = max(vida, 100) # Vida máxima mínima é 100;

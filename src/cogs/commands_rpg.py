@@ -40,7 +40,7 @@ class RPGCommands(commands.Cog):
                 return
             
             # Cria o personagem:
-            player = Player(nome, 1, 100, 100, [], 0, classe)
+            player = Player(nome, 1, 100, 20, [], 0, classe)
             self.players[ctx.author.id] = player
             
             await ctx.send(embed=criar_embed(
@@ -70,12 +70,12 @@ class RPGCommands(commands.Cog):
                 descricao=f"Menu para ver suas informações !",
                 color=discord.Color.purple(),
                 campos=[
-                    ["Classe", f"``{player.classe}``", True],
-                    ["Nível", f"``{player.nivel}``", True],
-                    ["Experiência",f"``{player.exp:.2f}/{player.calcular_exp_proximo_nivel():.2f}``", True],
-                    ["Vida", f"``{player.vida}/{player.vida_maxima}``", True],
-                    ["Dano", f"``{player.dano}``", True],
-                    ["Inventário", ", ".join(player.inventario) if player.inventario else "Vazio", False],        
+                    ["Classe:", f"``{player.classe}``", True],
+                    ["Nível:", f"``{player.nivel}``", True],
+                    ["Experiência:",f"``{player.exp:.2f}/{player.calcular_exp_proximo_nivel():.2f}``", True],
+                    ["Vida:", f"``{player.vida}/{player.vida_maxima}``", True],
+                    ["Dano:", f"``{player.dano}``", True],
+                    ["Inventário:", ", ".join(player.inventario) if player.inventario else "Vazio", False],        
                 ]
             ))
             
@@ -88,7 +88,7 @@ class RPGCommands(commands.Cog):
         try:
 
             player = self.players.get(ctx.author.id)
-            
+
             if not player:
                 await ctx.send("*Você ainda não tem um personagem. Use ``!criar_personagem`` para criar um.*")
                 return
@@ -97,18 +97,18 @@ class RPGCommands(commands.Cog):
                 await ctx.send("*Você já está em uma batalha!*")
                 return
             
-            inimigo = Inimigo("Dragão", 100, 1, 200, 100)
+            inimigo = Inimigo("Dragão", 100, 1, 15, 100)
             inimigo.adicionar_jogador_ao_combate(player)
             self.batalhas_ativas[ctx.author.id] = inimigo
 
             await ctx.send(embed=criar_embed(
                 titulo="Batalha Iniciada!",
-                descricao=f"Voce encontrou o(a) {inimigo.nome}\n{inimigo.descricao}",
+                descricao=f"Você encontrou o(a) {inimigo.nome}\n{inimigo.descricao}",
                 color=discord.Color.purple(),
                 campos=[
-                    ["**Voce [V.d | N.v ]**:", f"``{player.vida}/{player.vida_maxima}`` | ``{player.nivel}``", True],
-                    ["**Inimigo [V.d | N.v ]**:", f"``{inimigo.vida}/{inimigo.vida_maxima}`` | ``{inimigo.nivel}``", True],
-                    ["**[Comando]**", "Use ``!atacar`` para atacar o inimigo ou ``!fugir`` para tentar escapar.", False]
+                    ["**Você [ V.d | N.v ]**:", f"``{player.vida}/{player.vida_maxima}`` | ``{player.nivel}``", True],
+                    ["**Inimigo [ V.d | N.v ]**:", f"``{inimigo.vida}/{inimigo.vida_maxima}`` | ``{inimigo.nivel}``", True],
+                    ["**[ Comando ]**", "Use ``!atacar`` para atacar o inimigo ou ``!fugir`` para tentar escapar.", False]
                 ]
             ))
 
@@ -128,12 +128,13 @@ class RPGCommands(commands.Cog):
                 await ctx.send("*Você não está em uma batalha!*")
                 return
             
+            await asyncio.sleep(0.5)
             player.atacar_inimigo(inimigo)
             await ctx.send(embed=criar_embed(
-                titulo="``[ Seu turno ]``",
+                titulo="``[ Seu Turno ]``",
                 color=discord.Color.blue(),
                 campos=[
-                    ["", f"Você atacou o {inimigo.nome} e causou **{player.dano}** de **dano**!", False],
+                    ["", f"Você atacou o **{inimigo.nome}** e causou **{player.dano} de dano!**", False],
                     ["Vida do inimigo: ",f"``{inimigo.vida}/{inimigo.vida_maxima}``", True]
                 ]
             ))
@@ -146,8 +147,9 @@ class RPGCommands(commands.Cog):
                 for item in recompensas:
                     player.add_item(item)
                 
+                await asyncio.sleep(0.5)
                 await ctx.send(embed=criar_embed(
-                    titulo="``Vitória! :``",
+                    titulo="``[ Vitória! ]``",
                     descricao=f"Você derrotou o {inimigo.nome} **!** \n depois de sua morte ele deixou cair:",
                     color=discord.Color.green(),
                     campos=[
@@ -159,22 +161,22 @@ class RPGCommands(commands.Cog):
 
             else:
 
-                await asyncio.sleep(1)
+                await asyncio.sleep(0.5)
                 nome_inimigo, dano_inimigo = inimigo.atacar_jogador(player)
                 await ctx.send(embed=criar_embed(
-                    titulo="``[Turno do Inimigo]``",
+                    titulo="``[ Turno do Inimigo ]``",
                     color=discord.Color.red(),
                     campos=[
-                        ["", f"O *{nome_inimigo}* atacou você e causou *{dano_inimigo}* de *dano!*", False],
+                        ["", f"O **{nome_inimigo}** atacou você e causou **{dano_inimigo} de dano!**", False],
                         ["Sua Vida: ", f"``{player.vida}/{player.vida_maxima}``", False]
                     ]
                 ))
 
-                await asyncio.sleep(1.5)
+                await asyncio.sleep(0.5)
                 await ctx.send(embed=criar_embed(
-                    titulo="``Resultado da Batalha:``",
-                    descricao=f"Uma batalha acirrada entre ``{player.nome}`` e ``{inimigo.nome}``\n *Resulta:* ",
-                    color=discord.Color.orange(),    
+                    titulo="``[ Resultado da Batalha ]``",
+                    descricao=f"Uma batalha acirrada entre ``{player.nome}`` e ``{inimigo.nome}``\n **Resulta:**",
+                    color=discord.Color.green(),   
                     campos=[
                         ["*Sua Vida*", f"``{player.vida}/{player.vida_maxima}``", True],
                         ["*Vida do Inimigo*", f"``{inimigo.vida}/{inimigo.vida_maxima}``", True]
@@ -184,8 +186,8 @@ class RPGCommands(commands.Cog):
                 if player.vida <= 0:
 
                     await ctx.send(embed=criar_embed(
-                        titulo="``Derrota :``",
-                        descricao=f"Voce foi derrotada pelo ``{inimigo.nome}``\n nao fique mal, *você sempre pode tentar de novo !*",
+                        titulo="``[ Derrota! ]``",
+                        descricao=f"Você foi derrotada pelo ``{inimigo.nome}``\n nao fique mal, *você sempre pode tentar de novo !*",
                         color= discord.Color.red(),
                     ))
                         
@@ -197,35 +199,57 @@ class RPGCommands(commands.Cog):
     @commands.command()
     async def fugir(self, ctx) -> None:
         """Usado para fugir de um combate"""
+
         try:
 
             player = self.players.get(ctx.author.id)
-    
+            inimigo = self.batalhas_ativas.get(ctx.author.id)
+
             if not ctx.author.id in self.batalhas_ativas:
                 await ctx.send("**Você não está em uma batalha!**")
                 return
 
-            if random.random() < 0.:
+            if random.random() < 0.99:
+
+                await asyncio.sleep(0.5)
                 del self.batalhas_ativas[ctx.author.id]
-                await ctx.send("Você conseguiu fugir com sucesso!")
+                await ctx.send(embed=criar_embed(
+                    titulo="``[ Seu Turno ]``",
+                    color=discord.Color.blue(),
+                    campos=[
+                        ["", f"**Você conseguiu fugir com sucesso!**  do **{inimigo.nome}**", False]
+                    ]
+                ))
+                
 
             else:
+
+                await asyncio.sleep(0.5)
+                await ctx.send(embed=criar_embed(
+                    titulo="``[ Seu Turno ]``",
+                    color=discord.Color.blue(),
+                    campos=[
+                        ["", f"Você tenta fogir, mas **falhou!** ", False],
+                    ]
+                ))
+
+                await asyncio.sleep(0.5)
                 inimigo = self.batalhas_ativas.get(ctx.author.id)
                 nome_inimigo, dano_inimigo = inimigo.atacar_jogador(player)
                 await ctx.send(embed=criar_embed(
-                        titulo="``[Turno do Inimigo]``",
-                        color=discord.Color.red(),
-                        campos=[
-                            ["", f"Você falhou em fugir! O {nome_inimigo} atacou você e causou {dano_inimigo} de dano!", False],
-                            ["Sua Vida: ", f"``{player.vida}/{player.vida_maxima}``", False]
-                        ]
-                    ))
+                    titulo="``[ Turno do Inimigo ]``",
+                    color=discord.Color.red(),
+                    campos=[
+                        ["", f"O **{nome_inimigo}** atacou você e causou **{dano_inimigo} de dano!**", False],
+                        ["Sua Vida: ", f"``{player.vida}/{player.vida_maxima}``", False]
+                    ]
+                ))
                 
                 if player.vida <= 0:
-
+                    await asyncio.sleep(0.5)
                     await ctx.send(embed=criar_embed(
-                        titulo="``Derrota :``",
-                        descricao=f"Voce foi derrotada pelo ``{inimigo.nome}``\n nao fique mal, *você sempre pode tentar de novo !*",
+                        titulo="``[ Derrota! ]``",
+                        descricao=f"Você foi derrotada pelo ``{inimigo.nome}``\n nao fique mal, *você sempre pode tentar de novo !*",
                         color= discord.Color.red(),
                     ))
                         
