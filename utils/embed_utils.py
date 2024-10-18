@@ -7,7 +7,8 @@ def criar_embed(
     titulo: Optional[str] = None,
     descricao: Optional[str] = None,
     color: discord.Color = discord.Color.default(),
-    campos: Optional[list] = None
+    campos: Optional[list] = None,
+    imagem: Optional[str] = None
     ) -> discord.Embed:
     """
     Cria e retorna um embed customizado.
@@ -17,6 +18,7 @@ def criar_embed(
         description (Optional[str]): A descrição principal do embed.
         color (discord.Color): A cor da barra lateral do embed.
         fields (Optional[list]): Uma lista de tuplas contendo (nome, valor, inline).
+        imagem (Optional[str]): Um url para a embed.
 
     Returns:
         discord.Embed: O embed customizado.
@@ -26,5 +28,8 @@ def criar_embed(
     if campos:
         for nome, value, inline in campos:
             embed.add_field(name=nome, value=value, inline=inline)
+
+    if imagem:
+        embed.set_image(url=imagem)
 
     return embed
