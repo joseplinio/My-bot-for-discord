@@ -15,6 +15,26 @@ class RPGCommands(commands.Cog):
         self.bot = bot
         self.players = {}
         self.batalhas_ativas = {}
+    
+    @commands.command()
+    async def iniciar(self, ctx):
+        try:
+
+            await ctx.send(embed=criar_embed(
+                color=discord.Color.dark_green(),
+                imagem="https://i.pinimg.com/originals/55/6e/42/556e42e20bd1da172be9b448239a68dd.gif"
+            ))
+            
+            await ctx.send(embed=criar_embed(
+                titulo="🌟 **Bem-vindo(a) ao Mundo de Aventuras!** 🌟\n\n",
+                color=discord.Color.dark_green(),
+                descricao="Prepare-se para embarcar em uma jornada épica de batalhas, descobertas e evolu'ção! ⚔️🛡️\n"
+                    "Crie seu personagem, usando `criar_personagem`!\n\n"
+                    "Que as estrelas guiem o seu caminho, e a sorte esteja sempre ao seu lado! 🍀✨\n\n",
+            ))
+
+        except Exception:
+            print(traceback.format_exc())
 
     @commands.command()
     async def c(self, ctx):
@@ -105,6 +125,7 @@ class RPGCommands(commands.Cog):
                 titulo="Batalha Iniciada!",
                 descricao=f"Você encontrou o(a) {inimigo.nome}\n{inimigo.descricao}",
                 color=discord.Color.purple(),
+                imagem="https://i.pinimg.com/originals/21/fc/37/21fc376f984e1af95f3e748efe07ecd4.gif",
                 campos=[
                     ["**Você [ V.d | N.v ]**:", f"``{player.vida}/{player.vida_maxima}`` | ``{player.nivel}``", True],
                     ["**Inimigo [ V.d | N.v ]**:", f"``{inimigo.vida}/{inimigo.vida_maxima}`` | ``{inimigo.nivel}``", True],
@@ -128,11 +149,12 @@ class RPGCommands(commands.Cog):
                 await ctx.send("*Você não está em uma batalha!*")
                 return
             
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(1)
             player.atacar_inimigo(inimigo)
             await ctx.send(embed=criar_embed(
                 titulo="``[ Seu Turno ]``",
                 color=discord.Color.blue(),
+                imagem="https://i.pinimg.com/originals/48/d2/d4/48d2d446903509f10103848b5fe648b9.gif",
                 campos=[
                     ["", f"Você atacou o **{inimigo.nome}** e causou **{player.dano} de dano!**", False],
                     ["Vida do inimigo: ",f"``{inimigo.vida}/{inimigo.vida_maxima}``", True]
@@ -147,32 +169,34 @@ class RPGCommands(commands.Cog):
                 for item in recompensas:
                     player.add_item(item)
                 
-                await asyncio.sleep(0.5)
+                await asyncio.sleep(1)
                 await ctx.send(embed=criar_embed(
                     titulo="``[ Vitória! ]``",
                     descricao=f"Você derrotou o {inimigo.nome} **!** \n depois de sua morte ele deixou cair:",
                     color=discord.Color.green(),
                     campos=[
                         ["*Recompensas:*", f"*Exp:* {inimigo.exp}\n *Items:* {", ".join(recompensas)}", False]
-                    ]
+                    ],
+                    imagem=""
                 ))
 
                 del self.batalhas_ativas[ctx.author.id]
 
             else:
 
-                await asyncio.sleep(0.5)
+                await asyncio.sleep(2)
                 nome_inimigo, dano_inimigo = inimigo.atacar_jogador(player)
                 await ctx.send(embed=criar_embed(
                     titulo="``[ Turno do Inimigo ]``",
                     color=discord.Color.red(),
+                    imagem="https://i.pinimg.com/originals/0b/2f/26/0b2f260d15a6ff832c1f6e1e40374155.gif",
                     campos=[
                         ["", f"O **{nome_inimigo}** atacou você e causou **{dano_inimigo} de dano!**", False],
                         ["Sua Vida: ", f"``{player.vida}/{player.vida_maxima}``", False]
                     ]
                 ))
 
-                await asyncio.sleep(0.5)
+                await asyncio.sleep(2)
                 await ctx.send(embed=criar_embed(
                     titulo="``[ Resultado da Batalha ]``",
                     descricao=f"Uma batalha acirrada entre ``{player.nome}`` e ``{inimigo.nome}``\n **Resulta:**",
@@ -211,7 +235,7 @@ class RPGCommands(commands.Cog):
 
             if random.random() < 0.99:
 
-                await asyncio.sleep(0.5)
+                await asyncio.sleep(1)
                 del self.batalhas_ativas[ctx.author.id]
                 await ctx.send(embed=criar_embed(
                     titulo="``[ Seu Turno ]``",
@@ -224,7 +248,7 @@ class RPGCommands(commands.Cog):
 
             else:
 
-                await asyncio.sleep(0.5)
+                await asyncio.sleep(1)
                 await ctx.send(embed=criar_embed(
                     titulo="``[ Seu Turno ]``",
                     color=discord.Color.blue(),
@@ -233,12 +257,13 @@ class RPGCommands(commands.Cog):
                     ]
                 ))
 
-                await asyncio.sleep(0.5)
+                await asyncio.sleep(1)
                 inimigo = self.batalhas_ativas.get(ctx.author.id)
                 nome_inimigo, dano_inimigo = inimigo.atacar_jogador(player)
                 await ctx.send(embed=criar_embed(
                     titulo="``[ Turno do Inimigo ]``",
                     color=discord.Color.red(),
+                    imagem="https://i.pinimg.com/originals/0b/2f/26/0b2f260d15a6ff832c1f6e1e40374155.gif",
                     campos=[
                         ["", f"O **{nome_inimigo}** atacou você e causou **{dano_inimigo} de dano!**", False],
                         ["Sua Vida: ", f"``{player.vida}/{player.vida_maxima}``", False]
@@ -246,7 +271,7 @@ class RPGCommands(commands.Cog):
                 ))
                 
                 if player.vida <= 0:
-                    await asyncio.sleep(0.5)
+                    await asyncio.sleep(1)
                     await ctx.send(embed=criar_embed(
                         titulo="``[ Derrota! ]``",
                         descricao=f"Você foi derrotada pelo ``{inimigo.nome}``\n nao fique mal, *você sempre pode tentar de novo !*",
