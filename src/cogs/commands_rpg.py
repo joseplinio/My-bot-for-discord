@@ -8,6 +8,7 @@ from utils.embed_utils import criar_embed
 import asyncio
 import traceback
 import random
+from .botes_interaction import BotesForRpg
 
 # Classe dos comandos para o RPG:
 class RPGCommands(commands.Cog):
@@ -16,66 +17,7 @@ class RPGCommands(commands.Cog):
         self.players = {}
         self.batalhas_ativas = {}
     
-    @commands.command()
-    async def iniciar(self, ctx):
-        try:
 
-            await ctx.send(embed=criar_embed(
-                color=discord.Color.dark_green(),
-                imagem="https://i.pinimg.com/originals/55/6e/42/556e42e20bd1da172be9b448239a68dd.gif"
-            ))
-            
-            await ctx.send(embed=criar_embed(
-                titulo="🌟 **Bem-vindo(a) ao Mundo de Aventuras!** 🌟\n\n",
-                color=discord.Color.dark_green(),
-                descricao="Prepare-se para embarcar em uma jornada épica de batalhas, descobertas e evolu'ção! ⚔️🛡️\n"
-                    "Crie seu personagem, usando `criar_personagem`!\n\n"
-                    "Que as estrelas guiem o seu caminho, e a sorte esteja sempre ao seu lado! 🍀✨\n\n",
-            ))
-
-        except Exception:
-            print(traceback.format_exc())
-
-    @commands.command()
-    async def c(self, ctx):
-        """Cria o personagem para o jogo."""
-        try:
-
-            if ctx.author.id in self.players:
-                await ctx.send("**Você já tem um personagem. Use ``!status`` para ver suas informações.**")
-                return
-            
-            # Instancia a classe CriarPersonagem para usar as perguntas:
-            criando_personagem = MetosCriarPersonagem(self.bot)
-
-            # Pergunta o nome e a classe:
-            nome = await criando_personagem.pergunta_nome(ctx)
-            if not nome:
-                await ctx.send("**Criação de personagem cancelada.**")
-                return
-
-            classe = await criando_personagem.pergunta_classe(ctx)
-            if not classe:
-                await ctx.send("**Criação de personagem cancelada.**")
-                return
-            
-            # Cria o personagem:
-            player = Player(nome, 1, 100, 20, [], 0, classe)
-            self.players[ctx.author.id] = player
-            
-            await ctx.send(embed=criar_embed(
-                titulo=f"Personagem ``{player.nome}`` classe ``{player.classe}`` foi criado com sucesso**!**",
-                color=discord.Color.purple(),
-                campos=[
-                    ["**[Dica]**", "*Use* ``!status`` *para ver suas informaçoes.*", True]
-                ]
-                
-            ))
-        
-        except Exception:
-            print(traceback.format_exc())
-
-    @commands.command()
     async def status(self, ctx):
         """Mostra o status do personagem do usuário."""
         try:
@@ -102,7 +44,6 @@ class RPGCommands(commands.Cog):
         except Exception:
             print(traceback.format_exc())
 
-    @commands.command()
     async def lutar(self, ctx):
         """Inicia uma luta contra um inimigo aleatório."""
         try:
@@ -136,7 +77,6 @@ class RPGCommands(commands.Cog):
         except Exception:
             print(traceback.format_exc())
             
-    @commands.command()
     async def atacar(self, ctx):
         """Usado para atacar o inimigo durante uma batalha"""
         
@@ -220,7 +160,6 @@ class RPGCommands(commands.Cog):
         except Exception:
             print(traceback.format_exc())
 
-    @commands.command()
     async def fugir(self, ctx) -> None:
         """Usado para fugir de um combate"""
 
@@ -233,7 +172,7 @@ class RPGCommands(commands.Cog):
                 await ctx.send("**Você não está em uma batalha!**")
                 return
 
-            if random.random() < 0.99:
+            if random.random() < 0.50:
 
                 await asyncio.sleep(1)
                 del self.batalhas_ativas[ctx.author.id]
@@ -245,7 +184,6 @@ class RPGCommands(commands.Cog):
                     ]
                 ))
                 
-
             else:
 
                 await asyncio.sleep(1)
@@ -285,3 +223,4 @@ class RPGCommands(commands.Cog):
        
 async def setup(bot):
     await bot.add_cog(RPGCommands(bot))
+    

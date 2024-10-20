@@ -32,7 +32,7 @@ class MetosCriarPersonagem():
         while True:
             
             await ctx.send(embed=criar_embed(
-                color=discord.Color.green(),
+                color=discord.Color.dark_green(),
                 campos=[
                     ["*Qual vai ser o nome do seu personagem?*", "", True]
                 ]
@@ -64,7 +64,7 @@ class MetosCriarPersonagem():
         while True:
             
             await ctx.send(embed=criar_embed(
-                color=discord.Color.green(),
+                color=discord.Color.dark_green(),
                 campos=[
                     ["*Qual classe você vai escolher, nobre aventureiro?*", menu(), True]
                 ]
@@ -85,3 +85,4 @@ class MetosCriarPersonagem():
             else:
                 await ctx.send('**Resposta inválida. Por favor, escolha um número correspondente à classe.**')
                 await asyncio.sleep(1.5)
+                
