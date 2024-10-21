@@ -1,5 +1,5 @@
 # Importaçoes:
-from .cog_sistema import MetosCriarPersonagem 
+from .cog_sistema import MetodoCriarPersonagem
 from discord.ext import commands
 import discord
 from src.models.inimigo import Inimigo
@@ -8,7 +8,7 @@ from utils.embed_utils import criar_embed
 import asyncio
 import traceback
 import random
-from .botes_interaction import BotesForRpg
+
 
 # Classe dos comandos para o RPG:
 class RPGCommands(commands.Cog):
@@ -79,7 +79,6 @@ class RPGCommands(commands.Cog):
             
     async def atacar(self, ctx):
         """Usado para atacar o inimigo durante uma batalha"""
-        
         try: 
 
             player = self.players.get(ctx.author.id)
@@ -162,7 +161,6 @@ class RPGCommands(commands.Cog):
 
     async def fugir(self, ctx) -> None:
         """Usado para fugir de um combate"""
-
         try:
 
             player = self.players.get(ctx.author.id)
