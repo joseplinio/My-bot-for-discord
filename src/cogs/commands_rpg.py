@@ -1,14 +1,13 @@
 # Importaçoes:
-from .cog_sistema import MetodoCriarPersonagem
 from discord.ext import commands
 import discord
 from src.models.inimigo import Inimigo
 from src.models.player import Player
-from utils.embed_utils import criar_embed
+from utils.interatividade.embeds import criar_embed
 import asyncio
 import traceback
 import random
-
+from discord.ui import View, Button
 
 # Classe dos comandos para o RPG:
 class RPGCommands(commands.Cog):
@@ -16,7 +15,6 @@ class RPGCommands(commands.Cog):
         self.bot = bot
         self.players = {}
         self.batalhas_ativas = {}
-    
 
     async def status(self, ctx):
         """Mostra o status do personagem do usuário."""

@@ -3,7 +3,7 @@ import re
 from typing import Optional
 import asyncio
 import discord
-from utils.embed_utils import criar_embed
+from utils.interatividade.embeds import criar_embed
 
 # Iniando a classe para a cog:
 class MetosCriarPersonagem():
