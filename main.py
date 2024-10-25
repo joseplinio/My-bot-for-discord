@@ -6,8 +6,7 @@ from dotenv import load_dotenv
 import os
 import asyncio
 import traceback
-from utils.interatividade.embeds.embed_utils import criar_embed
-from utils.interatividade.funcoes.funcoes_bot import iniciar
+from utils.interatividade.funcoes_for_bot.funcoes_bot import iniciar
 
 # Carega o .env:
 load_dotenv()
@@ -22,25 +21,29 @@ bot = commands.Bot(command_prefix=os.getenv('PREFIX'), intents=intents)
 # Evento de inicialização do bot
 @bot.event
 async def on_ready():
-    
     try:
-        channel_id = bot.get_channel(1259652678942720051)
-        await iniciar(channel_id)
+        channel_id = 1259652678942720051  # ID do canal que você deseja acessar
+        channel = bot.get_channel(channel_id)
+        
+        if channel:
+            await iniciar(channel, bot)  # Inicializa a lógica do bot com o canal
 
-        print('-'*42)
+        # Log de inicialização do bot
+        print('-' * 42)
         print(f'|\033[32m Bot: {bot.user.name} está pronto\033[m!'.center(49))
         print(f'| ID: {bot.user.id}'.center(33))
-        print('-'*42)
+        print('-' * 42)
         print()
 
-    except Exception:
+    except Exception as e:
+        print(f"Ocorreu um erro no evento on_ready: {e}")
         print(traceback.format_exc())
 
 # Tratamento de erro para comandos inválidos:
 @bot.event
-async def on_command_error(channel, error):
+async def on_command_error(ctx, error):
     if isinstance(error, CommandNotFound):
-        await channel.send(f'**Sorry. Comando não reconhecido, caso queira ver a lista de comandos digite `!help`.**')
+        await ctx.send(f'**Sorry. Comando não reconhecido, caso queira ver a lista de comandos digite `!help`.**')
         
 # Função principal para carregar os cogs:
 async def load_cogs():
