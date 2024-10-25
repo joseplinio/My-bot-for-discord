@@ -3,11 +3,11 @@ from discord.ext import commands
 import discord
 from src.models.inimigo import Inimigo
 from src.models.player import Player
-from utils.interatividade.embeds import criar_embed
+from utils.interatividade.funcoes_for_bot.embed_utils import criar_embed
 import asyncio
 import traceback
 import random
-from discord.ui import View, Button
+from .cog_sistema import MetodosCriarPersonagem
 
 # Classe dos comandos para o RPG:
 class RPGCommands(commands.Cog):
@@ -16,16 +16,50 @@ class RPGCommands(commands.Cog):
         self.players = {}
         self.batalhas_ativas = {}
 
-    async def status(self, ctx):
+    async def criar_personagem(self, interaction: discord.Interaction):
+        """Cria o personagem para o jogo."""
+        try:
+            if interaction.user.id in self.players:
+                await interaction.response.send_message("**Você já tem um personagem. Use ``!status`` para ver suas informações.**", ephemeral= True)
+                return
+            
+            # Instancia a classe CriarPersonagem para usar as perguntas:
+            criando_personagem = MetodosCriarPersonagem(self.bot)
+
+            # Pergunta ko nome e a classe:
+            nome = await criando_personagem.pergunta_nome(interaction)
+            if not nome:
+                await interaction.response.send_message("**Criação de personagem cancelada.**",ephemeral=True)
+                return
+
+            # Cria o personagem:
+            player = Player(nome, 1, 100, 20, [], 0, "ola mundo")
+            self.players[interaction.user.id] = player
+            
+            # Mensagem de criaçao do personagem para o user:
+            await interaction.followup.send(embed=criar_embed(
+                titulo=f"Personagem ``{player.nome}`` classe ``ola mundo`` foi criado com sucesso!",
+                color=discord.Color.dark_green(),
+                campos=[
+                    ["**[Dica]**", "*Use* ``status`` *para ver suas informaçoes.*", True]
+                ]
+                ),
+                ephemeral=True
+            )
+            
+        except Exception:
+            print(traceback.format_exc())
+
+    async def status(self, interaction:discord.Interaction):
         """Mostra o status do personagem do usuário."""
         try:
         
-            player = self.players.get(ctx.author.id)
+            player = self.players.get(interaction.user.id)
             if not player:
-                await ctx.send("*Você ainda não tem um personagem. Use ``!criar_personagem`` para criar um.*")
+                await interaction.response.send_message("*Você ainda não tem um personagem. Use ``!criar_personagem`` para criar um.*")
                 return
             
-            await ctx.send(embed=criar_embed(
+            await interaction.response.send_message(embed=criar_embed(
             titulo=f"``[ Status de {player.nome} ]``",
                 descricao=f"Menu para ver suas informações !",
                 color=discord.Color.purple(),

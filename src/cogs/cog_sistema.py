@@ -3,86 +3,100 @@ import re
 from typing import Optional
 import asyncio
 import discord
-from utils.interatividade.embeds import criar_embed
+from utils.interatividade.funcoes_for_bot.embed_utils import criar_embed
+import traceback
 
-# Iniando a classe para a cog:
-class MetosCriarPersonagem():
+# Iniciaando a classe para a cog:
+class MetodosCriarPersonagem():
     def __init__(self, bot):
         self.bot = bot
-
-    async def fazer_pergunta(self, ctx, pergunta: str, timeout: float = 30.0) -> Optional[str]:
-        await ctx.send(pergunta)
-
-        def check(m):
-            return m.author == ctx.author and m.channel == ctx.channel
-        
+       
+    async def fazer_pergunta(self, interaction: discord.Interaction , pertunta: str, timeout: float = 30.0) -> Optional[str]:
         try:
-            response = await self.bot.wait_for("message", check=check, timeout=timeout)
-            return response.content.strip()
-        except asyncio.TimeoutError:
-            await ctx.send("**Você demorou muito tempo para responder.**")
-            return None
-    
-    async def confirma_escolha(self, ctx, choice: str) -> bool:
-        confirm = await self.fazer_pergunta(ctx, f'Você escolheu: **{choice}**. Está correto? **(sim/não)**') 
-        return confirm and confirm.lower().strip()[0] == "s"
-    
+            # Caso ja nao tenha sido respondida sinalisa para o discord que a 
+            # resposta esta sendo pertaprada:
+            if not interaction.response.is_done():
+                await interaction.response.defer(ephemeral=True)
 
-    async def pergunta_nome(self, ctx) -> Optional[str]:
-        while True:
-            
-            await ctx.send(embed=criar_embed(
-                color=discord.Color.dark_green(),
-                campos=[
-                    ["*Qual vai ser o nome do seu personagem?*", "", True]
-                ]
-            ))
+            # Faz a pergunta para o player:
+            await interaction.followup.send(embed=criar_embed(
+                descricao=pertunta,
+                color=discord.Color.dark_green()
+                ),
+                ephemeral=True
+            )
 
-            nome  =  await self.fazer_pergunta(ctx, "Sua escolha:")
-            if not nome:
+            # Analisa que clicou a mensagem:
+            def check(m):
+                return interaction.user == m.author and interaction.channel == m.channel
+
+            try:
+                # Pegua a responsta do user, de forma formatada:
+                response = await self.bot.wait_for('message', check=check, timeout=timeout)
+                return response.content.strip()
+
+            # Erro de tempo para caso nem ter uma resposta com mensegem:     
+            except asyncio.TimeoutError():
+                await interaction.response.send_message(criar_embed(
+                    descricao="**Você demorou muito tempo para responder.**",
+                    color=discord.Color.dark_red()
+                    ),
+                    ephemeral=True
+                )
                 return None
-            
-            nome_limpo = re.sub(r'\s+', '_', nome)
-            nome_limpo = re.sub(r'[<>]', '', nome_limpo)
-
-            if not re.match("^[A-Za-z0-9_-]*$", nome_limpo):
-                await ctx.send("**Nome inválido! Use apenas letras, números, hífens e sublinhados.**")
-                continue
-            
-            if await self.confirma_escolha(ctx, nome_limpo):
-                await ctx.send(f'Ótimo nome, **{nome_limpo} !**')
-                await asyncio.sleep(1.5)
-                return nome_limpo
-
-
-    async def pergunta_classe(self, ctx) -> Optional[str]:
-        lista_de_classes = ["Herói", "Mago", "Arqueiro", "Guerreiro"]
-
-        def menu():
-            return "\n".join(f"**{idx}** - **{classe}**" for idx, classe in enumerate(lista_de_classes, 1))      
         
-        while True:
+        except Exception:
+            print(traceback.format_exc())
             
-            await ctx.send(embed=criar_embed(
-                color=discord.Color.dark_green(),
-                campos=[
-                    ["*Qual classe você vai escolher, nobre aventureiro?*", menu(), True]
-                ]
-            ))
-            
-            escolha =  await self.fazer_pergunta(ctx, "Digite o número correspondente à classe:")
-            if  not escolha:
-                return None
+    # Funçao para confirmaçao de dados, retornado com formataçao sem espasos e
+    # em letras minusculas, e verifica se a confirmaçao nao foi passada:
+    async def confirmar_pergunta(self, interaction: discord.Interaction, choice: str) -> bool:
+    
+        confirmar =  await self.fazer_pergunta(interaction, f'Você escolheu: **{choice}**. Está correto? **(sim/não)**')
+        if confirmar is None:
+            return False
+        return confirmar.lower().strip() == "s"
 
-            if escolha.isdigit() and 1 <= int(escolha) <= len(lista_de_classes):
-                classe_escolhida = lista_de_classes[ int(escolha) - 1]
+    # Funçao para perguntar o nome do user:
+    async def pergunta_nome(self, interaction: discord.Interaction) -> str:
+        try:
+            while True:
+            
+                # Resposta do user sendo guardada em uma varievel, com validaçao para
+                # caso nao tiver nada:
+                nome = await self.fazer_pergunta(interaction, "*Qual vai ser o nome do seu personagem?*")
+                if not nome:
+                    return None
                 
-                if await self.confirma_escolha(ctx, classe_escolhida):
-                    await ctx.send(f'Sua classe escolhida é **{classe_escolhida}** .')
+                # Limpando o nome:
+                nome_limpo = re.sub(r'\s+', '_', nome)
+                nome_limpo = re.sub(r'[<>]', '', nome_limpo)
+
+                # Erro no nome para pervinir de ataques:
+                if not re.match("^[A-Za-z0-9_-]*$", nome_limpo):
+                    await interaction.followup.send(embed=criar_embed(
+                        descricao="**Nome inválido! Use apenas letras, números, hífens e sublinhados.**",
+                        color=discord.Color.dark_red()
+                        ),
+                        ephemeral=True
+                    )
+                    continue
+                
+                # Fasendo a pergunta de confirmaçao da resposta do user, retornando 
+                # o nome dele se a resposta for sim, se nao so vola para o inicio do 
+                # wilhe:
+                if await self.confirmar_pergunta(interaction, nome_limpo):
+                    await interaction.followup.send(embed=criar_embed(
+                        descricao=f'Ótimo nome, **{nome_limpo} !**',
+                        color=discord.Color.dark_green()
+                        ),
+                        ephemeral=True
+                    )
                     await asyncio.sleep(1.5)
-                    return classe_escolhida
-                
-            else:
-                await ctx.send('**Resposta inválida. Por favor, escolha um número correspondente à classe.**')
-                await asyncio.sleep(1.5)
-                
+                    return nome_limpo
+                 
+        except Exception:
+            print(traceback.format_exc())
+    
+    async def perguntar_classe(self, interaction: discord.Interaction) -> str:
+        pass
