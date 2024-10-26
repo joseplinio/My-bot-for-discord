@@ -49,7 +49,7 @@ class Registro(discord.ui.Modal):
             else:
                 await interaction.followup.send(
                     embed=criar_embed(
-                        descricao="**Vamos tentar novamente.**",
+                        descricao="** ✴️ Vamos tentar novamente.**",
                         color=discord.Color.dark_orange()
                     ),
                     ephemeral=True
