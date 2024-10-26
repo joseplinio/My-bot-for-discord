@@ -8,7 +8,10 @@ import asyncio
 import traceback
 import random
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 from utils.interatividade.interface.botao_confirmacao import MetodosCriarPersonagem
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 
@@ -19,6 +22,7 @@ class RPGCommands(commands.Cog):
         self.players = {}
         self.batalhas_ativas = {}
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     async def criar_personagem(self, interaction: discord.Interaction):
         """Cria o personagem para o jogo."""
@@ -55,6 +59,8 @@ class RPGCommands(commands.Cog):
         except Exception:
             print(traceback.format_exc())
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     async def status(self, interaction:discord.Interaction):
