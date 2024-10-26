@@ -7,7 +7,10 @@ from utils.interatividade.funcoes_for_bot.embed_utils import criar_embed
 import asyncio
 import traceback
 import random
+<<<<<<< Updated upstream
 from utils.interatividade.interface.botao_confirmacao import MetodosCriarPersonagem
+=======
+>>>>>>> Stashed changes
 
 # Classe dos comandos para o RPG:
 class RPGCommands(commands.Cog):
@@ -16,6 +19,7 @@ class RPGCommands(commands.Cog):
         self.players = {}
         self.batalhas_ativas = {}
 
+<<<<<<< Updated upstream
     async def criar_personagem(self, interaction: discord.Interaction):
         """Cria o personagem para o jogo."""
         try:
@@ -51,6 +55,8 @@ class RPGCommands(commands.Cog):
         except Exception:
             print(traceback.format_exc())
 
+=======
+>>>>>>> Stashed changes
     async def status(self, interaction:discord.Interaction):
         """Mostra o status do personagem do usuário."""
         try:
