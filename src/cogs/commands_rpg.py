@@ -7,10 +7,6 @@ from utils.interatividade.funcoes_for_bot.embed_utils import criar_embed
 import asyncio
 import traceback
 import random
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 # Classe dos comandos para o RPG:
 class RPGCommands(commands.Cog):
     def __init__(self, bot) -> None:
