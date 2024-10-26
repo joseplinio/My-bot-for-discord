@@ -16,14 +16,14 @@ async def iniciar(ctx, bot):
             #     )
             # )
             
-            iniciar_jogo = await ctx.send(embed=criar_embed(
-                titulo="🌟 **Bem-vindo(a) ao Mundo de Aventuras!** 🌟\n\n",
-                color=discord.Color.dark_green(),
-                descricao="Prepare-se para embarcar em uma jornada épica de batalhas, descobertas e evolu'ção! ⚔️🛡️\n"
-                    "Crie seu personagem, usando `Criar Personagem`!\n\n"
-                    "Que as estrelas guiem o seu caminho, e a sorte esteja sempre ao seu lado! 🍀✨\n\n",
-                ),
-                
+            iniciar_jogo = await ctx.send(
+                embed=criar_embed(
+                    titulo="🌟 **Bem-vindo(a) ao Mundo de Aventuras!** 🌟\n\n",
+                    color=discord.Color.dark_green(),
+                    descricao="Prepare-se para embarcar em uma jornada épica de batalhas, descobertas e evolu'ção! ⚔️🛡️\n"
+                        "Crie seu personagem, usando `Criar Personagem`!\n\n"
+                        "Que as estrelas guiem o seu caminho, e a sorte esteja sempre ao seu lado! 🍀✨\n\n",
+                ),    
             )
 
             # Instancia o o botao para ser envida:
