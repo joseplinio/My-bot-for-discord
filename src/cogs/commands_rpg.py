@@ -7,7 +7,7 @@ from utils.interatividade.funcoes_for_bot.embed_utils import criar_embed
 import asyncio
 import traceback
 import random
-from .cog_sistema import MetodosCriarPersonagem
+from utils.interatividade.interface.botao_confirmacao import MetodosCriarPersonagem
 
 # Classe dos comandos para o RPG:
 class RPGCommands(commands.Cog):
@@ -29,7 +29,8 @@ class RPGCommands(commands.Cog):
             # Pergunta ko nome e a classe:
             nome = await criando_personagem.pergunta_nome(interaction)
             if not nome:
-                await interaction.response.send_message("**Criação de personagem cancelada.**",ephemeral=True)
+                if not interaction.response.is_done(): 
+                    await interaction.followup.send("**Criação de personagem cancelada.**",ephemeral=True)
                 return
 
             # Cria o personagem:

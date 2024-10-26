@@ -2,7 +2,7 @@
 from utils.interatividade.funcoes_for_bot.embed_utils import criar_embed
 import discord
 import traceback
-from utils.interatividade.botes_for_bot.botao_criar import BotaoCriarPerosnagem
+from utils.interatividade.interface.botao_criar import BotaoCriarPerosnagem
 
 # Funçao para iniciar o bot com mensage para o user:
 
