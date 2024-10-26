@@ -7,11 +7,6 @@ from utils.interatividade.funcoes_for_bot.embed_utils import criar_embed
 import asyncio
 import traceback
 import random
-<<<<<<< Updated upstream
-from utils.interatividade.interface.botao_confirmacao import MetodosCriarPersonagem
-=======
->>>>>>> Stashed changes
-
 # Classe dos comandos para o RPG:
 class RPGCommands(commands.Cog):
     def __init__(self, bot) -> None:
@@ -19,44 +14,6 @@ class RPGCommands(commands.Cog):
         self.players = {}
         self.batalhas_ativas = {}
 
-<<<<<<< Updated upstream
-    async def criar_personagem(self, interaction: discord.Interaction):
-        """Cria o personagem para o jogo."""
-        try:
-            if interaction.user.id in self.players:
-                await interaction.response.send_message("**Você já tem um personagem. Use ``!status`` para ver suas informações.**", ephemeral= True)
-                return
-            
-            # Instancia a classe CriarPersonagem para usar as perguntas:
-            criando_personagem = MetodosCriarPersonagem(self.bot)
-
-            # Pergunta ko nome e a classe:
-            nome = await criando_personagem.pergunta_nome(interaction)
-            if not nome:
-                if not interaction.response.is_done(): 
-                    await interaction.followup.send("**Criação de personagem cancelada.**",ephemeral=True)
-                return
-
-            # Cria o personagem:
-            player = Player(nome, 1, 100, 20, [], 0, "ola mundo")
-            self.players[interaction.user.id] = player
-            
-            # Mensagem de criaçao do personagem para o user:
-            await interaction.followup.send(embed=criar_embed(
-                titulo=f"Personagem ``{player.nome}`` classe ``ola mundo`` foi criado com sucesso!",
-                color=discord.Color.dark_green(),
-                campos=[
-                    ["**[Dica]**", "*Use* ``status`` *para ver suas informaçoes.*", True]
-                ]
-                ),
-                ephemeral=True
-            )
-            
-        except Exception:
-            print(traceback.format_exc())
-
-=======
->>>>>>> Stashed changes
     async def status(self, interaction:discord.Interaction):
         """Mostra o status do personagem do usuário."""
         try:
