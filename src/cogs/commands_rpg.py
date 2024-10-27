@@ -8,7 +8,6 @@ import asyncio
 import traceback
 import random
 
-
 # Classe dos comandos para o RPG:
 class RPGCommands(commands.Cog):
     def __init__(self, bot) -> None:
