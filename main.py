@@ -7,6 +7,7 @@ import os
 import asyncio
 import traceback
 from utils.interatividade.funcoes_for_bot.msg_init import iniciar
+from utils.interatividade.funcoes_for_bot.embed_utils import criar_embed
 
 # Carega o .env:
 load_dotenv()
@@ -41,9 +42,15 @@ async def on_ready():
 
 # Tratamento de erro para comandos inválidos:
 @bot.event
-async def on_command_error(ctx, error):
+async def on_command_error(interaction: discord.Interaction , error):
     if isinstance(error, CommandNotFound):
-        await ctx.send(f'**Sorry. Comando não reconhecido, caso queira ver a lista de comandos digite `!help`.**')
+        await interaction.response.send_message(
+            embed=criar_embed(
+                descricao="** ❌ Nome inválido! Use apenas letras, números, hífens e sublinhados.**",
+                color=discord.Color.dark_red(),
+            ),
+            ephemeral=True
+        )
         
 # Função principal para carregar os cogs:
 async def load_cogs():
