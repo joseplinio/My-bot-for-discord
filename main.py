@@ -42,7 +42,7 @@ async def on_ready():
 
 # Tratamento de erro para comandos inválidos:
 @bot.event
-async def on_command_error(interaction: discord.Interaction , error):
+async def on_command_error(ctx, error):
     if isinstance(error, CommandNotFound):
         await interaction.response.send_message(
             embed=criar_embed(
