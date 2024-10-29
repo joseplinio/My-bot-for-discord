@@ -2,10 +2,9 @@
 from utils.interatividade.funcoes_for_bot.embed_utils import criar_embed
 import discord
 import traceback
-from utils.interatividade.botes_for_bot.botao_criar import BotaoCriarPerosnagem
+from utils.interatividade.interface.botao_criar import BotaoCriarPerosnagem
 
 # Funçao para iniciar o bot com mensage para o user:
-
 async def iniciar(ctx, bot):
     """Usado para inicar o jogo, no casso a mensagem do inicio do jogo"""
     try:
@@ -22,11 +21,10 @@ async def iniciar(ctx, bot):
             descricao="Prepare-se para embarcar em uma jornada épica de batalhas, descobertas e evolu'ção! ⚔️🛡️\n"
                 "Crie seu personagem, usando `Criar Personagem`!\n\n"
                 "Que as estrelas guiem o seu caminho, e a sorte esteja sempre ao seu lado! 🍀✨\n\n",
-            ),
-            
+            ),  
         )
 
-        # Instancia o o botao para ser envida:
+        # Instancia o o botao para ser enviado:
         view = BotaoCriarPerosnagem(bot)
         await iniciar_jogo.edit(view=view)
         await view.wait()
