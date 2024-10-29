@@ -13,9 +13,7 @@ class BotaoCriarPerosnagem(discord.ui.View):
     @discord.ui.button(label="Criar Personagem!", style=discord.ButtonStyle.green)
     async def botao_criar_personagem(self, interaction: discord.Interaction, button: discord.ui.Button):        
         try:
-            await interaction.response.send_modal(Registro()) 
+            await interaction.response.send_modal(Registro(self.bot)) 
         except Exception:
             print(traceback.format_exc())    
             
-        
-
