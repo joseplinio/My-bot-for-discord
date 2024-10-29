@@ -6,12 +6,12 @@ from dotenv import load_dotenv
 import os
 import asyncio
 import traceback
-from utils.interatividade.funcoes_for_bot.funcoes_bot import iniciar
+from utils.interatividade.funcoes_for_bot.msg_init import iniciar
 
 # Carega o .env:
 load_dotenv()
 
-# Configurar intents:
+# Configura as permissoes:
 intents = discord.Intents.default()
 intents.message_content = True
 
