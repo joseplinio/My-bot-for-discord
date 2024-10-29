@@ -4,10 +4,12 @@ from utils.interatividade.interface.botao_confirmacao import ConfirmacaoView
 import discord
 import re
 import traceback
+from utils.interatividade.interface.botao_classes import BotaoClasses
 
 class Registro(discord.ui.Modal):
-    def __init__(self):
+    def __init__(self, bot):
         super().__init__(title="Registrar Nome do Personagem")
+        self.bot = bot
 
         # Campo para o nome
         self.nome = discord.ui.TextInput(
@@ -18,6 +20,7 @@ class Registro(discord.ui.Modal):
         self.add_item(self.nome)  # Adiciona o TextInput à Modal
 
     async def on_submit(self, interaction: discord.Interaction):
+        from utils.interatividade.interface.botao_criar import BotaoCriarPerosnagem
         nome = self.nome.value.strip()
 
         # Limpeza do nome: substitui espaços por sublinhados e remove caracteres '<' e '>'
@@ -44,20 +47,38 @@ class Registro(discord.ui.Modal):
                         descricao=f"Ótimo nome, **{nome_limpo}!**",
                         color=discord.Color.dark_green()
                     ),
-                    ephemeral=True
+                    ephemeral=True,
                 )
-            else:
+                classes = BotaoClasses()
                 await interaction.followup.send(
                     embed=criar_embed(
-                        descricao="** ✴️ Vamos tentar novamente.**",
+                        descricao="🌌 **Prepare-se para uma jornada épica repleta de desafios e conquistas!** 🌌\n\n"
+                            "🛡️ **Escolha sua classe e defina seu destino!** Use os `botes` para selecionar entre valentes guerreiros, "
+                            "astutos Alquimistas e ágeis Rangers. Cada classe traz habilidades únicas que irão moldar sua jornada.\n\n"
+                            "⚔️ **Crie seu personagem e prepare-se para enfrentar inimigos poderosos, explorar reinos fascinantes e descobrir tesouros inimagináveis!**\n\n"
+                            "🌠 **Que a sorte e a bravura estejam sempre ao seu lado!** 🍀✨",
+                        color=discord.Color.dark_green()
+                    ),
+                    ephemeral=True,
+                    view=classes
+                )
+
+            else:
+                # Instancia o botao para ser enviado:
+                view = BotaoCriarPerosnagem(self.bot)
+                await interaction.followup.send(
+                    embed=criar_embed(
+                        descricao="** 📙 Vamos tentar novamente.**",
                         color=discord.Color.dark_orange()
                     ),
-                    ephemeral=True
+                    ephemeral=True,
+                    view=view
                 )
+
         except Exception:
             print(traceback.format_exc())
             
-    async def confirmar_pergunta(self, interaction, objeto):
+    async def confirmar_pergunta(self, interaction: discord.Interaction, objeto) -> bool:
         # Cria uma view para confirmação
         view = ConfirmacaoView(objeto)
         await interaction.response.send_message(
