@@ -41,7 +41,7 @@ async def on_ready():
 
 # Tratamento de erro para comandos inválidos:
 @bot.event
-async def on_command_error(ctx, error):
+async def on_command_error(interaction:discord.Interaction, error):
     if isinstance(error, CommandNotFound):
         await ctx.send(f'**Sorry. Comando não reconhecido, caso queira ver a lista de comandos digite `!help`.**')
         
