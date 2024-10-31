@@ -24,7 +24,7 @@ class BotaoClasses(discord.ui.View):
             await interaction.response.defer()
         await interaction.followup.send(await self.escolher_classe(interaction, "ranger"))
 
-    async def escolher_classe(self, interaction: discord.Interaction, classe: str) -> None:
+    async def escolher_classe(self, interaction: discord.Interaction, classe: str) -> str:
         await interaction.followup.send(
             embed=criar_embed(
                 descricao=f"Voce escolheu a classe **{classe.capitalize()}**",
@@ -32,3 +32,5 @@ class BotaoClasses(discord.ui.View):
             ),
             ephemeral=True
         )
+        return classe.capitalize()
+    
