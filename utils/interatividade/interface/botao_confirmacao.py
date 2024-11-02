@@ -15,7 +15,7 @@ class ConfirmacaoView(discord.ui.View):
         self.stop()  # Parar a espera após o clique no botão "Sim"
     
     @discord.ui.button(label="Não", style=discord.ButtonStyle.red)
-    async def botao_nao(self, interaction: discord.Interaction, button: discord.ui.Button):  # Renomeado para evitar conflito
+    async def botao_nao(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.confirmacao = False
         await interaction.response.defer()
         self.stop()  # Parar a espera após o clique no botão "Não"
