@@ -7,6 +7,8 @@ from utils.interatividade.funcoes_for_bot.embed_utils import criar_embed
 import asyncio
 import traceback
 import random
+from .cog_modals import Registro
+from utils.interatividade.interface.botao_classes import BotaoClasses
 
 # Classe dos comandos para o RPG:
 class RPGCommands(commands.Cog):
@@ -14,7 +16,7 @@ class RPGCommands(commands.Cog):
         self.bot = bot
         self.players = {}
         self.batalhas_ativas = {}
-
+    
     async def status(self, interaction:discord.Interaction):
         """Mostra o status do personagem do usuário."""
         try:
@@ -87,15 +89,17 @@ class RPGCommands(commands.Cog):
             
             await asyncio.sleep(1)
             player.atacar_inimigo(inimigo)
-            await ctx.send(embed=criar_embed(
-                titulo="``[ Seu Turno ]``",
-                color=discord.Color.blue(),
-                imagem="https://i.pinimg.com/originals/48/d2/d4/48d2d446903509f10103848b5fe648b9.gif",
-                campos=[
-                    ["", f"Você atacou o **{inimigo.nome}** e causou **{player.dano} de dano!**", False],
-                    ["Vida do inimigo: ",f"``{inimigo.vida}/{inimigo.vida_maxima}``", True]
-                ]
-            ))
+            await ctx.send(
+                embed=criar_embed(
+                    titulo="``[ Seu Turno ]``",
+                    color=discord.Color.blue(),
+                    imagem="https://i.pinimg.com/originals/48/d2/d4/48d2d446903509f10103848b5fe648b9.gif",
+                    campos=[
+                        ["", f"Você atacou o **{inimigo.nome}** e causou **{player.dano} de dano!**", False],
+                        ["Vida do inimigo: ",f"``{inimigo.vida}/{inimigo.vida_maxima}``", True]
+                    ]
+                )
+            )
             
             if inimigo.vida <= 0:
     
@@ -106,15 +110,16 @@ class RPGCommands(commands.Cog):
                     player.add_item(item)
                 
                 await asyncio.sleep(1)
-                await ctx.send(embed=criar_embed(
-                    titulo="``[ Vitória! ]``",
-                    descricao=f"Você derrotou o {inimigo.nome} **!** \n depois de sua morte ele deixou cair:",
-                    color=discord.Color.green(),
-                    campos=[
-                        ["*Recompensas:*", f"*Exp:* {inimigo.exp}\n *Items:* {", ".join(recompensas)}", False]
-                    ],
-                    imagem=""
-                ))
+                await ctx.send(
+                    embed=criar_embed(
+                        titulo="``[ Vitória! ]``",
+                        descricao=f"Você derrotou o {inimigo.nome} **!** \n depois de sua morte ele deixou cair:",
+                        color=discord.Color.green(),
+                        campos=[
+                            ["*Recompensas:*", f"*Exp:* {inimigo.exp}\n *Items:* {", ".join(recompensas)}", False]
+                        ],
+                    )
+                )
 
                 del self.batalhas_ativas[ctx.author.id]
 

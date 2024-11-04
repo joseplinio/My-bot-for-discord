@@ -50,7 +50,7 @@ class Registro(discord.ui.Modal):
                 )
 
                 # Exibe a tela para escolher a classe
-                view_classe = BotaoClasses()  # Instancia a classe BotaoClasses
+                view_classe = BotaoClasses(nome_limpo)  # Instancia a classe BotaoClasses passando nome
                 await interaction.followup.send(
                     embed=criar_embed(
                         descricao=(
@@ -66,22 +66,6 @@ class Registro(discord.ui.Modal):
                     view=view_classe
                 )
 
-                # Exibe a tela para escolher a classe
-                view_classe = BotaoClasses()  # Instancia a classe BotaoClasses
-                await interaction.followup.send(
-                    embed=criar_embed(
-                        descricao=(
-                            "🌌 **Prepare-se para uma jornada épica repleta de desafios e conquistas!** 🌌\n\n"
-                            "🛡️ **Escolha sua classe e defina seu destino!** Selecione entre valentes Guerreiros, "
-                            "astutos Alquimistas e ágeis Rangers. Cada classe traz habilidades únicas que irão moldar sua jornada.\n\n"
-                            "⚔️ **Crie seu personagem e prepare-se para enfrentar inimigos poderosos, explorar reinos fascinantes e descobrir tesouros inimagináveis!**\n\n"
-                            "🌠 **Que a sorte e a bravura estejam sempre ao seu lado!** 🍀✨"
-                        ),
-                        color=discord.Color.dark_green()
-                    ),
-                    ephemeral=True,
-                    view=view_classe
-                )
             else:
                 await interaction.followup.send(
                     embed=criar_embed(
