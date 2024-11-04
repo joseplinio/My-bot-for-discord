@@ -3,6 +3,7 @@ import discord
 from utils.interatividade.funcoes_for_bot.embed_utils import criar_embed
 from utils.interatividade.interface.botao_confirmacao import ConfirmacaoView
 from src.models.player import Player
+from utils.interatividade.interface.botao_status import BotaoStatus
 
 class BotaoClasses(discord.ui.View):
     def __init__(self, nome):
@@ -49,10 +50,12 @@ class BotaoClasses(discord.ui.View):
             
             await interaction.followup.send(
                 embed=criar_embed(
-                    descricao=f"🎉 Parabéns! Seu personagem **{player.nome}** da classe **{player.classe}** foi criado!",
+                    titulo=f"🎉 Parabéns! Seu personagem **{player.nome}** da classe **{player.classe}** foi criado!",
+                    descricao="**[Dica]** \n clique no botao `Status` para ver suas informaçoes",
                     color=discord.Color.green()
                 ),
-                ephemeral=True
+                ephemeral=True,
+                view=BotaoStatus(player)
             )
             
         else:
