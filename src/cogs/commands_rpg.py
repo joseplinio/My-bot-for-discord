@@ -2,13 +2,11 @@
 from discord.ext import commands
 import discord
 from src.models.inimigo import Inimigo
-from src.models.player import Player
 from utils.interatividade.funcoes_for_bot.embed_utils import criar_embed
 import asyncio
 import traceback
 import random
-from .cog_modals import Registro
-from utils.interatividade.interface.botao_classes import BotaoClasses
+
 
 # Classe dos comandos para o RPG:
 class RPGCommands(commands.Cog):
