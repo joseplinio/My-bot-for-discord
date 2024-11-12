@@ -3,5 +3,3 @@ data
 __pycache__
 .pytest_cache
 .env
-test_tests.py
-chat_bot
