@@ -7,7 +7,7 @@ services: # Servisos serve para colocar os serviso para o user
     environment: # Configuraçoes do postgres:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=docker
-      - POSTGRES_DB=users_for_bot
+      - POSTGRES_DB=bot_discord
     volumes: # Onde vai fica o db
       - postgresql:/bitnami/postgresql
     networks: # Pra cominar tipo uma API
@@ -17,5 +17,5 @@ networks:
     driver: bridge
 volumes:
   postgresql:
-    name: users_for_bot
+    name: bot_discord
     driver: local
