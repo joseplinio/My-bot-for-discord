@@ -1,7 +1,6 @@
 #Importaçoes:
 from .inimigo import Inimigo
 
-# Classe Player:
 class Player:
     """
     Representa um player no jogo.
@@ -13,19 +12,21 @@ class Player:
         dano (int): O dano que o player pode causar;
         inventario (dict): O inventario do player para carregar os itens;
         exp (int): A quantidade de experiência que o player possui;
-        classe (str): A classe do player (ex.: Guerreiro, Mago).
+        classe (str): A classe do player (ex.: Guerreiro, Mago);
+        missao (str): A missao do player de acordo com rpg.
     """
 
-    def __init__(self, nome: str, nivel: int, vida: int, dano: int, inventario: dict, exp: int, classe: str):
-        self._nome = nome # Uma String;
-        self._inventario = inventario # Um dicionario;
+    def __init__(self, nome: str, nivel: int, vida: int, dano: int, inventario: dict, exp: int, classe: str, missao: str):
+        self._nome = nome
+        self._inventario = inventario
         self._nivel = max(nivel, 1) # Nivel minimo é 1;
         self._vida_maxima = max(vida, 100) # Vida máxima mínima é 100;
         self._vida = self._vida_maxima  # Vida inicial é igual à vida máxima;
         self._dano = max(dano, 15)  # Dano mínimo é 15;
         self._exp = max(exp, 0)  # Experiência mínima é 0;
-        self._classe = classe # Classe e igual e classe ;]
-       
+        self._classe = classe 
+        self._missao = missao 
+
     # Getters para acessar os atributos de forma controlada:
     @property
     def nome(self) -> str:
@@ -58,6 +59,10 @@ class Player:
     @property
     def nivel(self) -> int:
         return self._nivel
+    
+    @property
+    def missao(self) -> str:
+        return self._missao
 
     # Setters para alterar valores com validação:
     @vida.setter
