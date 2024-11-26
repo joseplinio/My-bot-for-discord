@@ -32,7 +32,6 @@ class BotaoClasses(discord.ui.View):
             print(traceback.format_exc())
 
     class BotaoClasse(discord.ui.Button):
-        
         def __init__(self, classe: str, fluxo: FluxoCriacaoPersonagem):
             """
             Botão personalizado para representar uma classe.
