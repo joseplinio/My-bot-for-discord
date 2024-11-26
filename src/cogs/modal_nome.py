@@ -1,9 +1,10 @@
 import discord
 import traceback
 from utils.interatividade.funcoes_for_bot.embed_utils import criar_embed
-from utils.interatividade.interface.botao_confirmacao import ConfirmacaoView
 from utils.interatividade.interface.botao_classes import BotaoClasses  # Importa o BotaoClasses separadamente
 from .fluxodecriacao import FluxoCriacaoPersonagem
+from utils.interatividade.funcoes_for_bot.confirmador import confirmar_pergunta
+import asyncio
 
 class ModalNome(discord.ui.Modal):
     """
@@ -39,34 +40,22 @@ class ModalNome(discord.ui.Modal):
                 return
         
             if nome_input:
-                # Cnfirmaçao do nome
-                if await self.confirmar_pergunta(interaction, nome_input):
+                # Confirmação do nome
+                resposta = await confirmar_pergunta(interaction, nome_input)
+                
+                if resposta is True:
                     await self.enviar_mensagem_sucesso(interaction, nome_input)
-                else:
+                    self.fluxo.definir_nome(nome_input)
+
+                elif resposta is False:
                     await self.enviar_tentar_novamente(interaction)
 
             else:
                 await self.enviar_nome_invalido(interaction)
-        
+
         except Exception:
             print(traceback.format_exc())
 
-    async def confirmar_pergunta(self, interaction: discord.Interaction, escolha: str) -> bool:
-        """
-        Envia uma pergunta para o usuário confirmar sua escolha.
-        """
-        view = ConfirmacaoView(escolha)
-        await interaction.response.send_message(
-            embed=criar_embed(
-                descricao=f"Você escolheu **{escolha}**. Confirmar?",
-                color=discord.Color.dark_green()
-            ),
-            view=view,
-            ephemeral=True
-        )
-        await view.wait()
-        return view.confirmacao
-    
     async def enviar_mensagem_sucesso(self, interaction: discord.Interaction, nome: str):
         """
         Envia mensagem confirmando o nome e exibindo as opções de classes.
@@ -78,6 +67,7 @@ class ModalNome(discord.ui.Modal):
             ),
             ephemeral=True,
         )
+        await asyncio.sleep(2)
 
         await interaction.followup.send(
             embed=criar_embed(
@@ -91,7 +81,7 @@ class ModalNome(discord.ui.Modal):
                 color=discord.Color.dark_green()
             ),
             ephemeral=True,
-            view=BotaoClasses(nome) # Exibe a tela para escolher a classe
+            view=BotaoClasses(["Guerreiro", "Ranger", "Alquimista"], FluxoCriacaoPersonagem) # Exibe a tela para escolher a classe
         )
 
     async def enviar_nome_invalido(self, interaction: discord.Interaction):
@@ -110,7 +100,7 @@ class ModalNome(discord.ui.Modal):
         """
         Envia mensagem pedindo para tentar novamente.
         """
-        from utils.interatividade.interface.botao_criar import BotaoCriarPerosnagem
+        from utils.interatividade.interface.botao_criar import BotaoCriarPersonagem
 
         await interaction.followup.send(
             embed=criar_embed(
@@ -118,5 +108,5 @@ class ModalNome(discord.ui.Modal):
                 color=discord.Color.dark_orange()
             ),
             ephemeral=True,
-            view=BotaoCriarPerosnagem(self.bot)
+            view=BotaoCriarPersonagem(self.bot)
         )
