@@ -31,5 +31,4 @@ def criar_embed(
 
     if imagem:
         embed.set_image(url=imagem)
-
     return embed
