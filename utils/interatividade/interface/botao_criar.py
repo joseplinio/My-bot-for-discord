@@ -1,19 +1,22 @@
 # Importaçoes:
 import discord
 import traceback
-from src.cogs.cog_modals import Registro
+from src.cogs.modal_nome import ModalNome
+from src.cogs.fluxodecriacao import FluxoCriacaoPersonagem
 
-# Inicio da classe para o botao criar personoagem
-class BotaoCriarPerosnagem(discord.ui.View):
+# Início da classe para o botão criar personagem
+class BotaoCriarPersonagem(discord.ui.View):
     def __init__(self, bot):
-            super().__init__()
-            self.bot = bot
+        super().__init__()
+        self.bot = bot
     
-    # Cria o botao configurado e chama a Modal quando clicado 
+    # Cria o botão configurado e chama a Modal quando clicado
     @discord.ui.button(label="Criar Personagem!", style=discord.ButtonStyle.green)
     async def botao_criar_personagem(self, interaction: discord.Interaction, button: discord.ui.Button):        
         try:
-            await interaction.response.send_modal(Registro(self.bot)) 
+            fluxo = FluxoCriacaoPersonagem() # Inicializando a classe `FluxoCriacaoPersonagem`
+            # Passando os parâmetros necessários para `ModalNome`
+            await interaction.response.send_modal(ModalNome(self.bot, fluxo))
+            self.stop()
         except Exception:
-            print(traceback.format_exc())    
-            
+            print(traceback.format_exc())
