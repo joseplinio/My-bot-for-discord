@@ -67,7 +67,7 @@ class ModalNome(discord.ui.Modal):
             ),
             ephemeral=True,
         )
-        await asyncio.sleep(2)
+        await asyncio.sleep(1.3)
 
         await interaction.followup.send(
             embed=criar_embed(
