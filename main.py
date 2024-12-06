@@ -47,7 +47,7 @@ async def on_command_error(ctx:commands.Context, error):
         
 # Função principal para carregar os cogs:
 async def load_cogs():
-    try:    
+    try:
         # await bot.load_extension('src.cogs.commands_rpg')
         pass
     except Exception:

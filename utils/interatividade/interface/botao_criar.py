@@ -15,7 +15,7 @@ class BotaoCriarPersonagem(discord.ui.View):
     async def botao_criar_personagem(self, interaction: discord.Interaction, button: discord.ui.Button):        
         try:
             fluxo = FluxoCriacaoPersonagem() # Inicializando a classe `FluxoCriacaoPersonagem`
-            # Passando os parâmetros necessários para `ModalNome`
+            
             await interaction.response.send_modal(ModalNome(self.bot, fluxo))
             self.stop()
         except Exception:
