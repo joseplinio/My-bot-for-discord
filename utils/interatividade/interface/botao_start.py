@@ -11,12 +11,11 @@ class BotaoCriarPersonagem(discord.ui.View):
         self.bot = bot
     
     # Cria o botão configurado e chama a Modal quando clicado
-    @discord.ui.button(label="Criar Personagem!", style=discord.ButtonStyle.green)
+    @discord.ui.button(label="Start!", style=discord.ButtonStyle.green, )
     async def botao_criar_personagem(self, interaction: discord.Interaction, button: discord.ui.Button):        
         try:
-            fluxo = FluxoCriacaoPersonagem() # Inicializando a classe `FluxoCriacaoPersonagem`
-            
+            fluxo = FluxoCriacaoPersonagem()
+    
             await interaction.response.send_modal(ModalNome(self.bot, fluxo))
-            self.stop()
         except Exception:
             print(traceback.format_exc())
