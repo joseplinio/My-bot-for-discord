@@ -52,19 +52,20 @@ class BotaoClasses(discord.ui.View):
             try:
                 if await confirmar_pergunta(interaction, self.classe):
                     await self.enviar_mensagem_sucesso(interaction, self.classe)
-                    await self.fluxo.definir_classe(self.classe)
-
+                    await self.fluxo.definir_classe(self, classe=self.classe)
                 else:
-                    await self.enviar_tentar_novamente()
+                    await self.enviar_tentar_novamente(interaction)
 
-            except Exception:
-                await interaction.response.send_message(
+            except Exception as e:
+                # Mensagem de erro em caso de falha no processo
+                await interaction.followup.send(
                     embed=criar_embed(
                         descricao="❌ **Ocorreu um erro ao processar sua escolha. Tente novamente.**",
                         color=discord.Color.dark_red(),
                     ),
                     ephemeral=True
                 )
+                print("Erro no callback:", str(e))
                 print(traceback.format_exc())
 
         async def enviar_mensagem_sucesso(self, interaction: discord.Interaction, classe: str):
@@ -78,23 +79,27 @@ class BotaoClasses(discord.ui.View):
                 ),
                 ephemeral=True,
             )
-            await asyncio.sleep(2)
+            await asyncio.sleep(1.3)
 
             await interaction.followup.send(
                 embed=criar_embed(
                     titulo="🌟 Aventura te chama para desafios épicos e mistérios lendários! 🌟\n\n",
                     descricao=(
                         """🌕 Responda ao **chamado** e ``escolha sua missão``! 🌕\n
-                        🌑 ``O Chamado da Lua Rúnica``: Encontre os antigos segredos perdidos sob a luz da lua e desvenda o enigma que conecta reinos esquecidos.\n
+                        🌑 ``O Chamado da Lua Rúnica``: Encontre os antigos:
+                        segredos perdidos sob a luz da lua e desvenda o enigma que conecta reinos esquecidos.\n
                         🔮 ``Os Fragmentos do Nexus Proibido``: Restaure o equilíbrio do multiverso ao recuperar artefatos poderosos que estavam perdidos em dimensões perigosas.\n
                         ⏳ ``O Segredo das Areias do Tempo``: Decifre as mensagens deixadas por viajantes do tempo e evite uma catástrofe que pode apagar a linha temporal.\n"""
                     ),
                     color=discord.Color.dark_red()
                 ),
                 ephemeral=True,
-                view=BotaoMissoes()
+                view=BotaoMissoes(
+                    missoes=["O Chamado da Lua Rúnica","Os Fragmentos do Nexus Proibido", "O Segredo das Areias do Tempo"],
+                    fluxo=FluxoCriacaoPersonagem    
+                ),
             )
-        
+            
         async def enviar_tentar_novamente(self, interaction: discord.Interaction):
             """
             Envia mensagem de tentar novamente a escolha de classe.
@@ -105,5 +110,5 @@ class BotaoClasses(discord.ui.View):
                     color=discord.Color.dark_orange()
                 ),
                 ephemeral=True,
-                view=BotaoClasses(["Guerreiro", "Alquimista", "Ranger"])
+                view=BotaoClasses(["Guerreiro", "Alquimista", "Ranger"], self.fluxo)
             )
