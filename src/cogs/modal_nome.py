@@ -100,7 +100,7 @@ class ModalNome(discord.ui.Modal):
         """
         Envia mensagem pedindo para tentar novamente.
         """
-        from utils.interatividade.interface.botao_criar import BotaoCriarPersonagem
+        from utils.interatividade.interface.botao_start import BotaoCriarPersonagem
 
         await interaction.followup.send(
             embed=criar_embed(

@@ -25,9 +25,9 @@ class FluxoCriacaoPersonagem():
         """Cria e retorna um objeto Player."""
         self.classe = classe
 
-    async def definir_misao(self, misao: str) -> bool:
+    async def definir_missao(self, missao: str) -> bool:
         """Define a missão do personagem."""
-        self.missao = misao
+        self.missao = missao
 
     async def criar_personagem(self) -> Player:
         """Cria e retorna um objeto Player."""
@@ -44,3 +44,4 @@ class FluxoCriacaoPersonagem():
             classe=self.classe,
             missao=self.missao
         )
+    
