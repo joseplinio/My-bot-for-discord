@@ -56,7 +56,6 @@ async def load_cogs():
 # Iniciar o bot e carregar cogs
 async def main():
     async with bot:
-        # await load_cogs()
         await bot.start(os.getenv('TOKEN'))
 
 # Executar o bot
