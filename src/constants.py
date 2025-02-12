@@ -1,5 +1,0 @@
-# Constantes globais
-DEFAULT_HP = 100
-DEFAULT_LEVEL = 1
-DEFAULT_INVENTORY = []
-DEFAULT_EXP = 0
