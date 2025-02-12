@@ -1,8 +1,8 @@
 # Importaçoes:
 import discord
 import traceback
-from src.cogs.modal_nome import ModalNome
-from src.cogs.fluxodecriacao import FluxoCriacaoPersonagem
+from src.cogs.user.modal_nome import ModalNome
+from src.cogs.user.fluxodecriacao import FluxoCriacaoPersonagem
 
 # Início da classe para o botão criar personagem
 class BotaoCriarPersonagem(discord.ui.View):

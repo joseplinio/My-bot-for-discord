@@ -1,13 +1,12 @@
 # Importações
 import discord
-from utils.interatividade.funcoes_for_bot.embed_utils import criar_embed
-from utils.interatividade.interface.botao_confirmacao import ConfirmacaoView
+from utils.funcoes_for_bot.embed_utils import criar_embed
+from utils.interatividade.interface.auxilio_botes.botao_confirmacao import ConfirmacaoView
 import traceback
-from utils.interatividade.funcoes_for_bot.confirmador import confirmar_pergunta
-from src.cogs.fluxodecriacao import FluxoCriacaoPersonagem
+from utils.funcoes_for_bot.confirmador import confirmar_pergunta
+from src.cogs.user.fluxodecriacao import FluxoCriacaoPersonagem
 from typing import List
 import asyncio
-from .botao_misao import BotaoMissoes
 
 class BotaoClasses(discord.ui.View):
     def __init__(self, classes: List[str], fluxo: FluxoCriacaoPersonagem, timeout: int = 30):
@@ -80,25 +79,6 @@ class BotaoClasses(discord.ui.View):
                 ephemeral=True,
             )
             await asyncio.sleep(1.3)
-
-            await interaction.followup.send(
-                embed=criar_embed(
-                    titulo="🌟 Aventura te chama para desafios épicos e mistérios lendários! 🌟\n\n",
-                    descricao=(
-                        """🌕 Responda ao **chamado** e ``escolha sua missão``! 🌕\n
-                        🌑 ``O Chamado da Lua Rúnica``: Encontre os antigos:
-                        segredos perdidos sob a luz da lua e desvenda o enigma que conecta reinos esquecidos.\n
-                        🔮 ``Os Fragmentos do Nexus Proibido``: Restaure o equilíbrio do multiverso ao recuperar artefatos poderosos que estavam perdidos em dimensões perigosas.\n
-                        ⏳ ``O Segredo das Areias do Tempo``: Decifre as mensagens deixadas por viajantes do tempo e evite uma catástrofe que pode apagar a linha temporal.\n"""
-                    ),
-                    color=discord.Color.dark_red()
-                ),
-                ephemeral=True,
-                view=BotaoMissoes(
-                    missoes=["O Chamado da Lua Rúnica","Os Fragmentos do Nexus Proibido", "O Segredo das Areias do Tempo"],
-                    fluxo=FluxoCriacaoPersonagem    
-                ),
-            )
             
         async def enviar_tentar_novamente(self, interaction: discord.Interaction):
             """

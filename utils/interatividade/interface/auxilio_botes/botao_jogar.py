@@ -1,7 +1,6 @@
 # importaçoes:
 import discord
 import traceback
-from utils.interatividade.funcoes_for_bot.embed_utils import criar_embed
 
 class BotaoJogar(discord.ui.View):
     def __init__(self):
