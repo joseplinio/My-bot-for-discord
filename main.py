@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 import os
 import asyncio
 import traceback
-from utils.interatividade.funcoes_for_bot.msg_init import iniciar
+from utils.funcoes_for_bot.msg_init import iniciar
 
 # Carega o .env:
 load_dotenv()
