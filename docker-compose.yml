@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres # imagem oficial do postgres
+    shm_size: 128mb # tamanho do db
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=${USER_POSTGRES}
+      - POSTGRES_DB=polls
+      - POSTGRES_PASSWORD=${KEY_POSTGRES} # senha do post
+    volumes:
+      - pulls_pg_data:/postgres # guardandos os dados
+    networks:
+      - app-network
+      
+  aplicacao:
+    build: ./ # pega imagem do bot no dokcerfile
+    depends_on: # dependencias 
+      - db
+    networks:
+    - app-network
+  
+networks:
+  app-network:
+    driver: bridge # para calls entres os conteiners
+
+volumes:
+  pulls_pg_data:
