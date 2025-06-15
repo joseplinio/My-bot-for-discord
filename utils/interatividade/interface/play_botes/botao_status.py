@@ -1,6 +1,6 @@
 # Importaçoes:
 import discord
-from utils.interatividade.funcoes_for_bot.embed_utils import criar_embed
+from utils.funcoes_for_bot.embed_utils import criar_embed
 import traceback
 
 class BotaoStatus(discord.ui.View):

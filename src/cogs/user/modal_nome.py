@@ -1,10 +1,10 @@
 # Importaçoes:
 import discord
 import traceback
-from utils.interatividade.funcoes_for_bot.embed_utils import criar_embed
-from utils.interatividade.interface.botao_classes import BotaoClasses  # Importa o BotaoClasses separadamente
+from utils.funcoes_for_bot.embed_utils import criar_embed
+from utils.interatividade.interface.play_botes.botao_classes import BotaoClasses  # Importa o BotaoClasses separadamente
 from .fluxodecriacao import FluxoCriacaoPersonagem
-from utils.interatividade.funcoes_for_bot.confirmador import confirmar_pergunta
+from utils.funcoes_for_bot.confirmador import confirmar_pergunta
 import asyncio
 
 class ModalNome(discord.ui.Modal):
@@ -101,7 +101,7 @@ class ModalNome(discord.ui.Modal):
         """
         Envia mensagem pedindo para tentar novamente.
         """
-        from utils.interatividade.interface.botao_start import BotaoCriarPersonagem
+        from utils.funcoes_for_bot.msg_init import BotaoCriarPersonagem
 
         await interaction.followup.send(
             embed=criar_embed(

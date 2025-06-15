@@ -1,9 +1,9 @@
 # Impotaçoes:
-from utils.interatividade.funcoes_for_bot.embed_utils import criar_embed
+from utils.funcoes_for_bot.embed_utils import criar_embed
 from discord.ext import commands
 import traceback
 import discord
-from utils.interatividade.interface.botao_start import BotaoCriarPersonagem
+from utils.interatividade.interface.auxilio_botes.botao_start import BotaoCriarPersonagem
 
 # Funçao para iniciar o bot com mensage para o user:
 async def iniciar(ctx: commands.Context, bot):

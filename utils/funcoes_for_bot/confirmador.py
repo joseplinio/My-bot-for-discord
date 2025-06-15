@@ -1,6 +1,6 @@
-from utils.interatividade.interface.botao_confirmacao import ConfirmacaoView
+from utils.interatividade.interface.auxilio_botes.botao_confirmacao import ConfirmacaoView
 import discord
-from utils.interatividade.funcoes_for_bot.embed_utils import criar_embed
+from utils.funcoes_for_bot.embed_utils import criar_embed
 
 async def confirmar_pergunta(interaction: discord.Interaction, escolha: str) -> bool | None:
     """
