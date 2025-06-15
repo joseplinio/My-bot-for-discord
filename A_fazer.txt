@@ -1,0 +1,2 @@
+Tenho que refazer do 0 esse projeto mudando coisas como o banco, arquitetura fluxo dos dados, porem nao tenho tempo
+mas eu vou mudar ele eu quero que ele fique bonito ;]
